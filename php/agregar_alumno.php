@@ -8,6 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $dni = trim ($_POST["dni"]);
 
     crearAlumno($conexion, $nombre, $apellido, $dni);
+    header("Location: ../php/listar_alumnos.php");
+    exit();
 }
 
 
@@ -35,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         <input type="text" name="dni" required><br>
 
         <input type="submit" value="Guardar">
-        <button type="button" >Ir al Index</button>
+        <button type="button" onclick="window.location.href='../index.html'">Ir al Index</button>
     </form>
 
 </body>
