@@ -5,18 +5,18 @@
 require '../config/connect.php';
 require '../config/connect.php';
 
-function crearAlumno($conexion, $nombre, $apellido, $dni) {
-    $query = "INSERT INTO usuario (nombre, apellido, dni) VALUES (?,?,?)";
+function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena) {
+    $query = "INSERT INTO usuario (nombre, apellido, email, cargo, contrasena) VALUES (?,?,?,?,?)";
 
     if ($stmt = $conexion->prepare($query)) { 
-        $stmt->bind_param("sss", $nombre, $apellido, $dni); // bindear (apunta) para asegurar que los elementos sean los correctos "sss" es string-string-string
+        $stmt->bind_param("sssss", $nombre, $apellido, $email, $cargo, $contrasena); // bindear (apunta) para asegurar que los elementos sean los correctos "sss" es string-string-string
     
         if ($stmt->execute()) {
-            echo "Alumno creado correctamente";
+            echo "Usuario creado correctamente";
 
             exit();
         } else {
-            echo "Error al crear alumno: ". $stmt->error;
+            echo "Error al crear usuario: ". $stmt->error;
         }
     } else {
         echo "Error: " . $query . "<br>" . $conexion->error;
@@ -25,11 +25,11 @@ function crearAlumno($conexion, $nombre, $apellido, $dni) {
 
 
 
-function editarAlumno($conexion, $id, $nombre, $apellido, $dni) {
+function editarAlumno($conexion, $id, $nombre, $apellido, $email, $cargo, $contrasena) {
     $query = "UPDATE usuario SET nombre = ?, apellido = ?, dni = ? WHERE id = ?";
     
     if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sssi", $nombre, $apellido, $dni, $id);
+        $stmt->bind_param("sssi", $nombre, $apellido, $email, $cargo, $contrasena, $id);
 
         if ($stmt->execute()) {
             echo "Alumno actualizado correctamente";
@@ -77,9 +77,9 @@ if ($stmtFicha = $conexion->prepare($sqlFicha)) {
         
         // Ejecutar la consulta
         if ($stmt->execute()) {
-            echo "alumno eliminada correctamente";
+            echo "Usuario eliminado correctamente";
         } else {
-            echo "Error al eliminar alumno: " . $stmt->error;
+            echo "Error al eliminar usuario: " . $stmt->error;
         }
         
         // Cerrar la sentencia
