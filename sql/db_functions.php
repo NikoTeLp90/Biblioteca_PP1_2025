@@ -1,16 +1,17 @@
 <?php
 
-include '../config/config.php';
-include '../config/connect.php';
+// include '../config/config.php';
+// include '../config/config.php';
+require '../config/connect.php';
+require '../config/connect.php';
 
-function crearAlumno($conexion, $nombre, $apellido, $dni){
-    $query = "INSERT INTO alumnos (nombre, apellido, dni) VALUES (?,?,?)";
+function crearAlumno($conexion, $nombre, $apellido, $dni) {
+    $query = "INSERT INTO usuario (nombre, apellido, dni) VALUES (?,?,?)";
 
-    if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sss", $nombre, $apellido, $dni);
-
+    if ($stmt = $conexion->prepare($query)) { 
+        $stmt->bind_param("sss", $nombre, $apellido, $dni); // bindear (apunta) para asegurar que los elementos sean los correctos "sss" es string-string-string
     
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             echo "Alumno creado correctamente";
 
             exit();
@@ -25,7 +26,7 @@ function crearAlumno($conexion, $nombre, $apellido, $dni){
 
 
 function editarAlumno($conexion, $id, $nombre, $apellido, $dni) {
-    $query = "UPDATE alumnos SET nombre = ?, apellido = ?, dni = ? WHERE id = ?";
+    $query = "UPDATE usuario SET nombre = ?, apellido = ?, dni = ? WHERE id = ?";
     
     if ($stmt = $conexion->prepare($query)) {
         $stmt->bind_param("sssi", $nombre, $apellido, $dni, $id);
@@ -47,7 +48,7 @@ function editarAlumno($conexion, $id, $nombre, $apellido, $dni) {
 
 
 function obtenerAlumnos($conexion): array {
-    $sql = "SELECT * FROM alumnos";
+    $sql = "SELECT * FROM usuario";
     $result = $conexion ->query($sql);
     $alumnos = [];
     if ($result->num_rows > 0) {
@@ -67,7 +68,7 @@ if ($stmtFicha = $conexion->prepare($sqlFicha)) {
     $stmtFicha->close();
     }
 
-    $sql = "DELETE FROM alumnos WHERE id = ?";
+    $sql = "DELETE FROM usuario WHERE id = ?";
     
     // Preparar la sentencia
     if ($stmt = $conexion->prepare($sql)) {
