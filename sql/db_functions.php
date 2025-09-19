@@ -1,19 +1,20 @@
 <?php
 
-// include '../config/config.php';
-// include '../config/config.php';
 require '../config/connect.php';
 require '../config/connect.php';
 
 function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena) {
     $query = "INSERT INTO usuario (nombre, apellido, email, cargo, contrasena) VALUES (?,?,?,?,?)";
 
-    if ($stmt = $conexion->prepare($query)) { 
+    if ($stmt = $conexion->prepare($query)) {
         $stmt->bind_param("sssss", $nombre, $apellido, $email, $cargo, $contrasena); // bindear (apunta) para asegurar que los elementos sean los correctos "sss" es string-string-string
-    
+
         if ($stmt->execute()) {
             echo "Usuario creado correctamente";
-
+            echo '<br>';
+            echo '<a href="../index.html">Ir al Index</button>';
+            echo '<br>';
+            echo '<a href="listar_usuarios.php">Ver usuarios</a>';
             exit();
         } else {
             echo "Error al crear usuario: ". $stmt->error;
@@ -23,21 +24,19 @@ function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena
     }
 }
 
-
-
-function editarAlumno($conexion, $id, $nombre, $apellido, $email, $cargo, $contrasena) {
-    $query = "UPDATE usuario SET nombre = ?, apellido = ?, dni = ? WHERE id = ?";
+function editarUsuario($conexion, $id, $nombre, $apellido, $email, $cargo) {
+    $query = "UPDATE usuario SET nombre = ?, apellido = ?, email = ?, cargo = ? WHERE id = ?;";
     
     if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sssi", $nombre, $apellido, $email, $cargo, $contrasena, $id);
+        $stmt->bind_param("ssssi", $nombre, $apellido, $email, $cargo, $id);
 
         if ($stmt->execute()) {
-            echo "Alumno actualizado correctamente";
+            echo "Usuario actualizado correctamente";
             // Opcional: redirigir a la lista de alumnos
-            header("Location: listar_alumnos.php");
+            header("Location: listar_usuarios.php");
             exit();
         } else {
-            echo "Error al actualizar el alumno: " . $stmt->error;
+            echo "Error al actualizar el usuario: " . $stmt->error;
         }
         
         $stmt->close();
@@ -46,42 +45,34 @@ function editarAlumno($conexion, $id, $nombre, $apellido, $email, $cargo, $contr
     }
 }
 
-
-function obtenerAlumnos($conexion): array {
-    $sql = "SELECT * FROM usuario";
+function obtenerUsuarios($conexion): array {
+    $sql = "SELECT * FROM usuario;";
     $result = $conexion ->query($sql);
-    $alumnos = [];
+    $usuarios = [];
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
-            $alumnos[] = $row;
+            $usuarios[] = $row;
         }
     }
-    return $alumnos;
+    return $usuarios;
 }
 
-function eliminarAlumno($conexion, $id) {
-// Primero, elimina los registros relacionados en ficha_medica
-$sqlFicha = "DELETE FROM alumnos WHERE id = ?";
-if ($stmtFicha = $conexion->prepare($sqlFicha)) {
-    $stmtFicha->bind_param("i", $id);
-    $stmtFicha->execute();
-    $stmtFicha->close();
-    }
+function eliminarUsuario($conexion, $id) {
 
-    $sql = "DELETE FROM usuario WHERE id = ?";
-    
+    $sql = "DELETE FROM usuario WHERE id = ?;";
+
     // Preparar la sentencia
     if ($stmt = $conexion->prepare($sql)) {
         // Vincular el parámetro
         $stmt->bind_param("i", $id);
-        
+
         // Ejecutar la consulta
         if ($stmt->execute()) {
             echo "Usuario eliminado correctamente";
         } else {
             echo "Error al eliminar usuario: " . $stmt->error;
         }
-        
+
         // Cerrar la sentencia
         $stmt->close();
     } else {

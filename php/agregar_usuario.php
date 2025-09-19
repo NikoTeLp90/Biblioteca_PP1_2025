@@ -1,6 +1,6 @@
 <?php
 
-include '../sql/db_functions.php';
+require '../sql/db_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
@@ -9,7 +9,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cargo = trim($_POST["cargo"]);
     $contrasena = trim($_POST["contrasena"]);
 
-    
     crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena);
 }
 
@@ -26,30 +25,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
   <h1>Crear usuario</h1>
   
-  <form action="../php/agregar_alumno.php" method="post">
+  <form action="../php/agregar_usuario.php" method="post">
 
-    <label for="nombre">Nombre:</label>
+    <label for="nombre">Nombre:</label><br>
     <input type="text" name="nombre" placeholder="Ingrese un nombre" required>
-    <br>
+    <br><br>
 
-    <label for="apellido">Apellido:</label>
+    <label for="apellido">Apellido:</label><br>
     <input type="text" name="apellido" placeholder="Ingrese un apellido" required>
-    <br>
+    <br><br>
 
-    <label for="email">Mail:</label>
-    <input type="text" name="email" placeholder="Ingrese un mail" required><br>
+    <label for="email">Mail:</label><br>
+    <input type="text" name="email" placeholder="Ingrese un mail" required>
+    <br><br>
 
-    <label for="cargo">Cargo:</label>
+    <label for="cargo">Cargo:</label><br>
     <select name="cargo">
       <option value="bibliotecario">Bibliotecario</option>
       <option value="admin">Administrador</option>
       <option value="secretario">Secretario</option>
     </select>
-      <br>
+    <br><br>
 
-    <label for="contrasena">Contraseña:</label>
+    <label for="contrasena">Contraseña:</label><br>
     <input type="password" name="contrasena" placeholder="Ingrese contraseña" required>
-    <br>
+    <br><br>
 
     <input type="submit" value="Guardar">
   </form>
