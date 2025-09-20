@@ -1,4 +1,5 @@
 <?php
+
 require '../config/connect.php';
 require '../sql/db_functions.php';
 
@@ -19,6 +20,7 @@ $stmt->bind_result($nombre, $apellido, $email, $cargo);
 $stmt->fetch();
 $stmt->close();
 $conexion->close();
+
 ?>
 
 <!DOCTYPE html>

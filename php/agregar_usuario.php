@@ -8,8 +8,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST["email"]);
     $cargo = trim($_POST["cargo"]);
     $contrasena = trim($_POST["contrasena"]);
+    $repetir_contrasena = trim($_POST["repetir_contrasena"]);
 
-    crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena);
+    if ($contrasena !== $repetir_contrasena) {
+        header("Location: agregar_usuario.php?error=contrasena");
+        exit();
+    }
+
+    $contrasena_hasheada = password_hash($contrasena, PASSWORD_DEFAULT);
+    // PASSWORD_DEFAULT es una constante de PHP que indica que se debe usar
+    // el algoritmo de hash mas seguro actualmente
+
+    crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena_hasheada);
 }
 
 ?>
@@ -23,8 +33,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
+
   <h1>Crear usuario</h1>
-  
+
+  <?php
+    if (isset($_GET['error']) && $_GET['error'] == 'contrasena') {
+        echo '<p>Error: Las contraseñas no coincidieron.</p>';
+    }
+  ?>
+
   <form action="../php/agregar_usuario.php" method="post">
 
     <label for="nombre">Nombre:</label><br>
@@ -49,6 +66,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <label for="contrasena">Contraseña:</label><br>
     <input type="password" name="contrasena" placeholder="Ingrese contraseña" required>
+    <br><br>
+
+    <label for="repetir_contrasena">Repetir contraseña:</label><br>
+    <input type="password" name="repetir_contrasena" placeholder="Ingrese contraseña" required>
     <br><br>
 
     <input type="submit" value="Guardar">
