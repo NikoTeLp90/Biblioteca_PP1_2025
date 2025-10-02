@@ -3,44 +3,62 @@ include '../sql/db_functions.php';
 
 
 if (isset($_GET['id'])) {
-    $alumno_id = $_GET['id'];
+    $usuario_id = $_GET['id'];
 
-    $query = "SELECT nombre, apellido, dni FROM alumnos WHERE id = ?";
+    $query = "SELECT nombre, apellido, email, cargo, contrasena FROM usuario WHERE id = ?";
     if ($stmt = $conexion->prepare($query)) {
 
-        $stmt->bind_param("i", $alumno_id);
+        $stmt->bind_param("i", $usuario_id);
         $stmt->execute();
-        $stmt->bind_result($nombre, $apellido, $dni);
+        $stmt->bind_result($nombre, $apellido, $email, $cargo, $contrasena);
         $stmt->fetch();
         $stmt->close();
     }
 } else {
-    echo "No se ha recibido el ID del alumno.";
+    echo "No se ha recibido el ID del usuario.";
     exit;
 }
 ?>
 
 <form action="" method="post">
-    <input type="hidden" name="alumno_id" value="<?php echo $alumno_id; ?>">
-    <label>Nombre:</label>
-    <input type="text" name="nombre" value="<?php echo $nombre; ?>"><br>
-    <label>Apellido:</label>
-    <input type="text" name="apellido" value="<?php echo $apellido; ?>"><br>
-    <label>DNI:</label>
-    <input type="text" name="dni" value="<?php echo $dni; ?>"><br>
-    <button type="submit">Guardar cambios</button>
+    <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" placeholder="Ingrese un nombre" required>
+        <br>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" name="apellido" placeholder="Ingrese un apellido" required>
+        <br>
+
+        <label for="email">Email:</label>
+        <input type="text" name="email" required><br>
+
+        <label for="cargo">Cargo:</label>
+        <select name="cargo">
+            <option value="bibliotecario">Bibliotecario</option>
+            <option value="admin">Administrador</option>
+            <option value="secretario">Secretario</option>
+        </select>
+
+        <label for="contrasena">Contraseña:</label>
+        <input type="password" name="contrasena" required><br>
+
+        <input type="submit" value="Guardar">
+        <a href="../index.html">Volver al index</a>
+        <button type="button" onclick="window.location.href='../index.html';">Ir al Index</button>
 </form>
 
 <?php
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $alumno_id = $_POST['alumno_id'];
+    $usuario_id = $_POST['usuario_id'];
     $nombre = $_POST['nombre'];
     $apellido = $_POST['apellido'];
-    $dni = $_POST['dni'];;
+    $email = $_POST['email'];
+    $cargo = $_POST['cargo'];
+    $contrasena = $_POST['contrasena'];
 
     
-    editarAlumno($conexion, $alumno_id, $nombre, $apellido, $dni);
+    editarUsuario($conexion, $usuario_id, $nombre, $apellido, $email, $cargo, $contrasena);
 }
 ?>

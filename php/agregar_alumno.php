@@ -5,10 +5,12 @@ include '../sql/db_functions.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
     $apellido = trim($_POST["apellido"]);
-    $dni = trim($_POST["dni"]);
+    $email = trim($_POST["email"]);
+    $cargo = trim($_POST["cargo"]);
+    $contrasena = trim($_POST["contrasena"]);
 
     
-    crearAlumno($conexion, $nombre, $apellido, $dni);
+    crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena);
 }
 
 ?>
@@ -18,11 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear alumno</title>
+    <title>Crear usuario</title>
 </head>
 
 <body>
-    <h1>Crear alumno</h1>
+    <h1>Crear usuario</h1>
     
     <form action="../php/agregar_alumno.php" method="post">
 
@@ -34,12 +36,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="apellido" placeholder="Ingrese un apellido" required>
         <br>
 
-        <label for="dni">DNI::</label>
-        <input type="text" name="dni" required><br>
+        <label for="email">Email:</label>
+        <input type="text" name="email" required><br>
 
+        <label for="cargo">Cargo:</label>
+        <select name="cargo">
+            <option value="bibliotecario">Bibliotecario</option>
+            <option value="admin">Administrador</option>
+            <option value="secretario">Secretario</option>
+        </select>
 
+        <label for="contrasena">Contraseña:</label>
+        <input type="password" name="contrasena" required><br>
 
         <input type="submit" value="Guardar">
+        <a href="../index.html">Volver al index</a>
         <button type="button" onclick="window.location.href='../index.html';">Ir al Index</button>
     </form>
 

@@ -3,19 +3,19 @@
 include '../config/config.php';
 include '../config/connect.php';
 
-function crearAlumno($conexion, $nombre, $apellido, $dni){
-    $query = "INSERT INTO alumnos (nombre, apellido, dni) VALUES (?,?,?)";
+function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena){
+    $query = "INSERT INTO usuario(nombre, apellido, email, cargo, contrasena) VALUES (?,?,?,?,?)";
 
     if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sss", $nombre, $apellido, $dni);
+        $stmt->bind_param("sssss", $nombre, $apellido, $email, $cargo, $contrasena);
 
     
         if($stmt->execute()){
-            echo "Alumno creado correctamente";
+            echo "Usuario creado correctamente";
 
             exit();
         } else {
-            echo "Error al crear alumno: ". $stmt->error;
+            echo "Error al crear usuario: ". $stmt->error;
         }
     } else {
         echo "Error: " . $query . "<br>" . $conexion->error;
@@ -24,19 +24,19 @@ function crearAlumno($conexion, $nombre, $apellido, $dni){
 
 
 
-function editarAlumno($conexion, $id, $nombre, $apellido, $dni) {
-    $query = "UPDATE alumnos SET nombre = ?, apellido = ?, dni = ? WHERE id = ?";
+function editarUsuario($conexion, $id, $nombre, $apellido, $email, $cargo, $contrasena) {
+    $query = "UPDATE usuario SET nombre = ?, apellido = ?, email = ?, cargo = ?, contrasena = ? WHERE id = ?";
     
     if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sssi", $nombre, $apellido, $dni, $id);
+        $stmt->bind_param("sssssi", $nombre, $apellido, $email, $cargo, $contrasena, $id);
 
         if ($stmt->execute()) {
-            echo "Alumno actualizado correctamente";
+            echo "Usuario actualizado correctamente";
             // Opcional: redirigir a la lista de alumnos
             header("Location: listar_alumnos.php");
             exit();
         } else {
-            echo "Error al actualizar el alumno: " . $stmt->error;
+            echo "Error al actualizar el usuario: " . $stmt->error;
         }
         
         $stmt->close();
