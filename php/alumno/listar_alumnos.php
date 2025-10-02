@@ -29,7 +29,7 @@ $alumnos = obtenerAlumnos($conexion);
                 echo '<td>' . $alumno['apellido'] . '</td>';
                 echo '<td>' . $alumno['dni'] . '</td>';
                 echo '<td>
-                        <a href="../php/editar_alumno.php?id=' . $alumno['id'] . '">Editar</a>
+                        <a href="../php/usuario/editar_alumno.php?id=' . $alumno['id'] . '">Editar</a>
                         <form action="../php/eliminar_alumno.php" method="POST" style="display:inline;">
                             <input type="hidden" name="alumno_id" value="' . $alumno['id'] . '">
                             <button type="submit" onclick="return confirm(\'¿Estás seguro de eliminar este alumno?\')">Eliminar</button>

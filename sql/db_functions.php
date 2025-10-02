@@ -87,47 +87,23 @@ if ($stmtFicha = $conexion->prepare($sqlFicha)) {
         echo "Error al preparar la consulta: " . $conexion->error;
     }
 }
+function crearInsumo($conexion, $nombre, $codigo, $categoria, $materia, $estado, $observacion){
+    $query = "INSERT INTO usuario(nombre, codigo, categoria, materia, estado, observacion) VALUES (?,?,?,?,?,?)";
+
+    if ($stmt = $conexion->prepare($query)) {
+        $stmt->bind_param("ssssss", $nombre, $codigo, $categoria, $materia, $estado, $observacion);
+
+    
+        if($stmt->execute()){
+            echo "Insumo creado correctamente";
+
+            exit();
+        } else {
+            echo "Error al crear Insumo: ". $stmt->error;
+        }
+    } else {
+        echo "Error: " . $query . "<br>" . $conexion->error;
+    }
+}
 
 ?>
-<?php
-include '../config/config.php';
-include '../config/connect.php';
-
-function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena){
-    $query = "INSERT INTO usuario (nombre, apellido, email, cargo, contrasena) VALUES (?,?,?,?,?)";
-
-    if ($stmt = $conexion->prepare($query) ){
-        $stmt ->bind_param("sssss", $nombre, $apellido, $email, $cargo, $contrasena);
-
-        if($stmt->execute()){
-            echo "Alumno creado correctamente";
-            
-            exit();
-        }else {
-            echo "Error al crear alumno: ". $stmt ->error;
-
-        }
-    }else {
-        echo "Error " . $query . "<br>" . $conexion ->error;
-    }
-}
-
-function editarUsuarios($conexion, $id, $nombre, $apellido, $email, $cargo, $contrasena){
-    $query = "UPDATE usuario SET nombre = ?, apellido = ?, cargo = ?, contraseña = ? WHERE id = ?";
-    
-    if ($stmt = $conexion->prepare($query) ){
-        $stmt ->bind_param("sssssi", $nombre, $apellido, $email, $cargo, $contrasena);
-
-        if($stmt->execute()){
-            echo "Alumno creado correctamente";
-            
-            exit();
-        }else {
-            echo "Error al crear alumno: ". $stmt ->error;
-
-        }
-    }else {
-        echo "Error " . $query . "<br>" . $conexion ->error;
-    }
-}
-

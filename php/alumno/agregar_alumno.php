@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <h1>Crear usuario</h1>
     
-    <form action="../php/agregar_alumno.php" method="post">
+    <form action="../php/alumno/agregar_alumno.php" method="post">
 
         <label for="nombre">Nombre:</label>
         <input type="text" name="nombre" placeholder="Ingrese un nombre" required>
