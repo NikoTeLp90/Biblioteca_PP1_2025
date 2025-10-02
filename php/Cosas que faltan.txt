@@ -1,0 +1,34 @@
+Cosas que Faltan:
+
+En alta de insumos(pantalla):
+    Nombre
+    Tratar cada insumo como entidad unica
+    Crear dos pantallas distintas(cargar y buscar)
+    
+    #Insumo (Campos de entidad):
+        -Codigo
+        -Nombre
+        -Tipo de insumo
+        -espacio de guardado
+        -estado
+        -observacion
+
+    #Usuario:
+        -Nombre
+        -apellido
+        -dni
+        -email
+        -cargo
+        -contraseña
+
+Correcciones para ALTA DE INSUMOS - BIBLIOTECA I.S.F.T N 12
+
+
+-cambiar Materia por carrera
+-Agregar funcional a la cantidad (inputs)
+-entidades: nombre, categoria(Tecnologia, bibliografia, electrico, otro)
+-materia x carrera (analisis de sistemas, seguridad e higiene, internet de las cosas, otro)
+-Consultar para que sirve la carrera
+-Estado(disponible, en reparación, fuera de servicio) 
+-falta un "DISPONIBILIDAD" que diga disponibilidad, prestamo o baja
+-Ir empezando con insumos (programar)       
