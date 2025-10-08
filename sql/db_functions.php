@@ -1,7 +1,5 @@
 <?php
 
-// include '../config/config.php';
-// include '../config/config.php';
 require '../config/connect.php';
 require '../config/connect.php';
 
