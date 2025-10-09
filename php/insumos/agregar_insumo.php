@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <h1>Crear insumo</h1>
     
-    <form action="../php/insumo/agregar_insumo.php" method="post">
+    <form action="" method="post">
 
         <label for="nombre">Nombre:</label>
         <input type="text" name="nombre" placeholder="Ingrese un nombre" required>
@@ -38,7 +38,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <br>
 
         <label for="categoria">categoria:</label>
-        <input type="text" name="categoria" required><br>
+        <select name="categoria">
+            <option value="tecnologia">Tecnologia</option>
+            <option value="bibliografia">Bibliografia</option>
+            <option value="electrico">Electrico</option>
+            <option value="Otro">Otro</option>
+        </select>
 
         <label for="materia">materia:</label>
         <select name="materia">

@@ -88,7 +88,7 @@ if ($stmtFicha = $conexion->prepare($sqlFicha)) {
     }
 }
 function crearInsumo($conexion, $nombre, $codigo, $categoria, $materia, $estado, $observacion){
-    $query = "INSERT INTO usuario(nombre, codigo, categoria, materia, estado, observacion) VALUES (?,?,?,?,?,?)";
+    $query = "INSERT INTO insumo(nombre, codigo, categoria, materia, estado, observacion) VALUES (?,?,?,?,?,?)";
 
     if ($stmt = $conexion->prepare($query)) {
         $stmt->bind_param("ssssss", $nombre, $codigo, $categoria, $materia, $estado, $observacion);
@@ -106,4 +106,55 @@ function crearInsumo($conexion, $nombre, $codigo, $categoria, $materia, $estado,
     }
 }
 
-?>
+function editarInsumo($conexion, $id_insumo, $nombre, $codigo, $categoria, $materia, $estado, $observacion) {
+    $query = "UPDATE insumo 
+              SET nombre = ?, codigo = ?, categoria = ?, materia = ?, estado = ?, observacion = ? 
+              WHERE id_insumo = ?";
+
+    if ($stmt = $conexion->prepare($query)) {
+        $stmt->bind_param("ssssssi", $nombre, $codigo, $categoria, $materia, $estado, $observacion, $id_insumo);
+
+        if ($stmt->execute()) {
+            echo "Insumo actualizado correctamente";
+            header("Location: ../php/insumos/listar_insumo.php");
+            exit();
+        } else {
+            echo "Error al actualizar el insumo: " . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        echo "Error al preparar la consulta: " . $conexion->error;
+    }
+}
+
+
+function obtenerInsumos($conexion): array {
+    $sql = "SELECT * FROM insumo";
+    $result = $conexion->query($sql);
+    $insumos = [];
+
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $insumos[] = $row;
+        }
+    }
+    return $insumos;
+}
+
+
+function eliminarInsumo($conexion, $id_insumo) {
+    $sql = "DELETE FROM insumo WHERE id_insumo = ?";
+
+    if ($stmt = $conexion->prepare($sql)) {
+        $stmt->bind_param("i", $id_insumo);
+
+        if ($stmt->execute()) {
+            echo "Insumo eliminado correctamente";
+        } else {
+            echo "Error al eliminar el insumo: " . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        echo "Error al preparar la consulta: " . $conexion->error;
+    }
+}

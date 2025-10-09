@@ -3,12 +3,12 @@ include '../sql/db_functions.php';
 
 
 if (isset($_GET['id'])) {
-    $usuario_id = $_GET['id'];
+    $id = $_GET['id'];
 
     $query = "SELECT nombre, apellido, email, cargo, contrasena FROM usuario WHERE id = ?";
     if ($stmt = $conexion->prepare($query)) {
 
-        $stmt->bind_param("i", $usuario_id);
+        $stmt->bind_param("i", $id);
         $stmt->execute();
         $stmt->bind_result($nombre, $apellido, $email, $cargo, $contrasena);
         $stmt->fetch();
@@ -22,36 +22,38 @@ if (isset($_GET['id'])) {
 
 <form action="" method="post">
     <label for="nombre">Nombre:</label>
-        <input type="text" name="nombre" placeholder="Ingrese un nombre" required>
-        <br>
+    <input type="text" name="nombre" value="<?php echo htmlspecialchars($nombre); ?>" required>
+    <br>
 
-        <label for="apellido">Apellido:</label>
-        <input type="text" name="apellido" placeholder="Ingrese un apellido" required>
-        <br>
+    <label for="apellido">Apellido:</label>
+    <input type="text" name="apellido" value="<?php echo htmlspecialchars($apellido); ?>" required>
+    <br>
 
-        <label for="email">Email:</label>
-        <input type="text" name="email" required><br>
+    <label for="email">Email:</label>
+    <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>" required><br>
 
-        <label for="cargo">Cargo:</label>
-        <select name="cargo">
-            <option value="bibliotecario">Bibliotecario</option>
-            <option value="admin">Administrador</option>
-            <option value="secretario">Secretario</option>
-        </select>
+    <label for="cargo">Cargo:</label>
+    <select name="cargo">
+        <option value="bibliotecario" <?php if($cargo=='bibliotecario') echo 'selected'; ?>>Bibliotecario</option>
+        <option value="admin" <?php if($cargo=='admin') echo 'selected'; ?>>Administrador</option>
+        <option value="secretario" <?php if($cargo=='secretario') echo 'selected'; ?>>Secretario</option>
+    </select>
 
-        <label for="contrasena">Contraseña:</label>
-        <input type="password" name="contrasena" required><br>
+    <label for="contrasena">Contraseña:</label>
+    <input type="password" name="contrasena" value="<?php echo htmlspecialchars($contrasena); ?>" required><br>
 
-        <input type="submit" value="Guardar">
-        <a href="../index.html">Volver al index</a>
-        <button type="button" onclick="window.location.href='../index.html';">Ir al Index</button>
+    <input type="hidden" name="id" value="<?php echo $id; ?>">
+
+    <input type="submit" value="Guardar">
+    <a href="../index.html">Volver al index</a>
+    <button type="button" onclick="window.location.href='../index.html';">Ir al Index</button>
 </form>
 
 <?php
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $usuario_id = $_POST['usuario_id'];
+    $id = $_POST['id'];
     $nombre = $_POST['nombre'];
     $apellido = $_POST['apellido'];
     $email = $_POST['email'];
@@ -59,6 +61,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $contrasena = $_POST['contrasena'];
 
     
-    editarUsuario($conexion, $usuario_id, $nombre, $apellido, $email, $cargo, $contrasena);
+    editarUsuario($conexion, $id, $nombre, $apellido, $email, $cargo, $contrasena);
 }
 ?>

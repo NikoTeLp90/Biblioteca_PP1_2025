@@ -14,7 +14,7 @@ $alumnos = obtenerAlumnos($conexion);
             <tr>
                 <th>ID</th>
                 <th>Nombre</th>
-                <th>Apellido</th>
+                <th>codigo</th>
                 <th>DNI</th>
                 <th>Acciones</th>
             </tr>
@@ -26,7 +26,7 @@ $alumnos = obtenerAlumnos($conexion);
                 echo '<tr>';
                 echo '<td>' . $alumno['id'] . '</td>';
                 echo '<td>' . $alumno['nombre'] . '</td>';
-                echo '<td>' . $alumno['apellido'] . '</td>';
+                echo '<td>' . $alumno['codigo'] . '</td>';
                 echo '<td>' . $alumno['dni'] . '</td>';
                 echo '<td>
                         <a href="../php/usuario/editar_alumno.php?id=' . $alumno['id'] . '">Editar</a>
