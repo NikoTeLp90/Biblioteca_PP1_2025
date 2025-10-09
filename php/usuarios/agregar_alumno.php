@@ -1,5 +1,13 @@
 <?php
 
+#session_start();
+
+// INMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
+// if (!isset($_SESSION['usuario'])) {
+//     header("Location: ../login/login.php");
+//     exit();
+// }
+
 include '../../sql/db_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -17,8 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
   }
 
+  $contrasena = password_hash($contrasena, PASSWORD_DEFAULT);
   crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena);
 }
+  #exit();
 
 ?>
 
