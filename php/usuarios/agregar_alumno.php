@@ -1,6 +1,6 @@
 <?php
 
-include '../sql/db_functions.php';
+include '../../sql/db_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $nombre = trim($_POST["nombre"]);
@@ -51,10 +51,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <a class="nav-link" href="index.html" id="linkInicio">Inicio</a>
+            <a class="nav-link" href="../index.html" id="linkInicio">Inicio</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../insumos/insumos.html" id="linkInsumos">Insumos</a>
+            <a class="nav-link" href="../php/listar_insumos.php" id="linkInsumos">Insumos</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="../prestamos/prestamos.html" id="linkPrestamos">Préstamos</a>
@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
 
        <div class="mb-3">
-        <label for="apellido" class="form-label fw-bold">Nombre</label>
+        <label for="apellido" class="form-label fw-bold">Apellido</label>
         <input type="text" class="form-control" id="apellido" name = "apellido" required>
       </div>
 

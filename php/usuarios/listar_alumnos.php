@@ -1,5 +1,6 @@
 <?php
-include '../sql/db_functions.php';
+require '../../config/connect.php';
+require '../../sql/db_functions.php';
 
 $alumnos = obtenerUsuarios($conexion);
 ?>
@@ -29,16 +30,16 @@ $alumnos = obtenerUsuarios($conexion);
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-                <a class="nav-link" href="../index.html" id="linkInicio">Inicio</a>
+                <a class="nav-link" href="../../index.html" id="linkInicio">Inicio</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../insumos/insumos.html" id="linkInsumos">Insumos</a>
+                <a class="nav-link" href="../../php/insumos/listar_insumos.php" id="linkInsumos">Insumos</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../prestamos/prestamos.html" id="linkPrestamos">Préstamos</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../php/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
+                <a class="nav-link" href="../../php/usuarios/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#" id="linkSalir">Salir</a>
@@ -49,7 +50,7 @@ $alumnos = obtenerUsuarios($conexion);
     </nav>
 
     <div class="container my-3 d-flex justify-content-end">
-        <a href="../php/agregar_alumno.php" class="btn btn-danger">Alta Usuario</a>
+        <a href="../../php/usuarios/agregar_alumno.php" class="btn btn-danger">Alta Usuario</a>
     </div>
 
     <div class="container">
