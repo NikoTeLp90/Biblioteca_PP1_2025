@@ -5,8 +5,11 @@ include '../config/connect.php';
 
 function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena){
     $query = "INSERT INTO usuario(nombre, apellido, email, cargo, contrasena) VALUES (?,?,?,?,?)";
+function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena){
+    $query = "INSERT INTO usuario(nombre, apellido, email, cargo, contrasena) VALUES (?,?,?,?,?)";
 
     if ($stmt = $conexion->prepare($query)) {
+        $stmt->bind_param("sssss", $nombre, $apellido, $email, $cargo, $contrasena);
         $stmt->bind_param("sssss", $nombre, $apellido, $email, $cargo, $contrasena);
 
     
@@ -31,16 +34,21 @@ function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena
 
 function editarUsuario($conexion, $id, $nombre, $apellido, $email, $cargo, $contrasena) {
     $query = "UPDATE usuario SET nombre = ?, apellido = ?, email = ?, cargo = ?, contrasena = ? WHERE id = ?";
+function editarUsuario($conexion, $id, $nombre, $apellido, $email, $cargo, $contrasena) {
+    $query = "UPDATE usuario SET nombre = ?, apellido = ?, email = ?, cargo = ?, contrasena = ? WHERE id = ?";
     
     if ($stmt = $conexion->prepare($query)) {
         $stmt->bind_param("sssssi", $nombre, $apellido, $email, $cargo, $contrasena, $id);
+        $stmt->bind_param("sssssi", $nombre, $apellido, $email, $cargo, $contrasena, $id);
 
         if ($stmt->execute()) {
+            echo "Usuario actualizado correctamente";
             echo "Usuario actualizado correctamente";
             // Opcional: redirigir a la lista de alumnos
             header("Location: listar_alumnos.php");
             exit();
         } else {
+            echo "Error al actualizar el usuario: " . $stmt->error;
             echo "Error al actualizar el usuario: " . $stmt->error;
         }
         
