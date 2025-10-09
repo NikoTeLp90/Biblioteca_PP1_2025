@@ -1,15 +1,21 @@
 <?php
-
 include'../sql/db_functions.php';
 
-if ($_SERVER["REQUEST_METHOD"]=="POST") {
-    $nombre= trim($_POST ["nombre"]);
-    $apellido= trim($_POST["apellido"]);
-    $email=trim($_POST["email"]);
-    $cargo=trim($_POST["cargo"]);
-    $contrasenia=trim($_POST["contrasenia"]);
 
-    crearEj1($conexion, $nombre, $apellido, $email, $cargo, $contrasenia);
+if (isset($_GET['id'])) {
+   $usuario_id= $_GET['id'];
+   $query ="SELECT nombre, apellido, email, cargo, contrasenia FROM usuario WHERE id=?";
+
+   If ($Stmt = $conexion->prepapre($query)) {
+       $stmt->bind_param("i", $usuario_id);
+       $stmt->execute();
+       $stmt->bind_result($nombre, $apellido, $email, $cargo, $contrasenia);
+       $stmt->fetch();
+       $stmt->close();
+   }
+}else{
+    echo "no se ha recibido el id del usuario";
+    exit;
 }
 
 ?>
