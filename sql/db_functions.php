@@ -11,14 +11,19 @@ function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena
 
     
         if($stmt->execute()){
-            echo "Usuario creado correctamente";
-
+            $msg = "Usuario creado correctamente";
+            // Mostrar mensaje al usuario y redirigir a la lista
+            echo "<script>alert(" . json_encode($msg) . "); window.location.href = 'listar_alumnos.php';</script>";
             exit();
         } else {
-            echo "Error al crear usuario: ". $stmt->error;
+            $err = "Error al crear usuario: " . $stmt->error;
+            // Mostrar mensaje de error y volver al formulario de alta
+            echo "<script>alert(" . json_encode($err) . "); window.location.href = 'agregar_alumno.php';</script>";
+            exit();
         }
     } else {
-        echo "Error: " . $query . "<br>" . $conexion->error;
+        $err = "Error: " . $query . " - " . $conexion->error;
+        echo "<script>alert(" . json_encode($err) . "); window.location.href = 'agregar_alumno.php';</script>";
     }
 }
 
@@ -46,9 +51,15 @@ function editarUsuario($conexion, $id, $nombre, $apellido, $email, $cargo, $cont
 }
 
 
-function obtenerAlumnos($conexion): array {
-    $sql = "SELECT * FROM alumnos";
-    $result = $conexion ->query($sql);
+function obtenerUsuarios($conexion): array {
+    $sql = "SELECT * FROM usuario";
+    $result = $conexion->query($sql);
+
+    if (!$result) {
+        // Mostrar error para depurar
+        die("Error en la consulta SQL: " . $conexion->error);
+    }
+
     $alumnos = [];
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
@@ -60,7 +71,7 @@ function obtenerAlumnos($conexion): array {
 
 function eliminarAlumno($conexion, $id) {
 // Primero, elimina los registros relacionados en ficha_medica
-$sqlFicha = "DELETE FROM alumnos WHERE id = ?";
+$sqlFicha = "DELETE FROM usuario WHERE id = ?";
 if ($stmtFicha = $conexion->prepare($sqlFicha)) {
     $stmtFicha->bind_param("i", $id);
     $stmtFicha->execute();
