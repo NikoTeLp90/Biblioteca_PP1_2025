@@ -1,6 +1,14 @@
 <?php
 
-include '../sql/db_functions.php';
+include '../../sql/db_functions.php';
+
+session_start();
+
+// INMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
+if (!isset($_SESSION['usuario'])) {
+    header("Location: ../login/login.php");
+    exit();
+}
 
 $alumnos = obtenerAlumnos($conexion);
 
@@ -29,11 +37,11 @@ $alumnos = obtenerAlumnos($conexion);
             echo "<td>" . $alumno['apellido'] . "</td>";
             echo "<td>" . $alumno['dni'] . "</td>";
             echo '<td>
-                <form action="../php/eliminar_alumno.php" method="POST" style="display:inline;">
+                <form action="../../php/alumno/eliminar_alumno.php" method="POST" style="display:inline;">
                     <input type="hidden" name="id" value="' . $alumno['id'] . '">
                     <button type="submit" onclick="return confirm(\'¿Estás seguro de eliminar?\')">Eliminar</button>
                 </form> |
-                <button onclick="window.location.href=\'../php/actualizar_alumno.php?id=' . $alumno['id'] . '\'">Actualizar</button>
+                <button onclick="window.location.href=\'../../php/alumno/actualizar_alumno.php?id=' . $alumno['id'] . '\'">Actualizar</button>
             </td>';
             echo "</tr>";
         }

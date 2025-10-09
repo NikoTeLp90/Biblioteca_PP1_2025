@@ -1,5 +1,5 @@
 <?php
-include '../sql/db_functions.php';
+include '../../sql/db_functions.php';
 
 // Verificar que se recibió el ID por POST
 if (isset($_POST['id']) && !empty($_POST['id'])) {
@@ -7,7 +7,7 @@ if (isset($_POST['id']) && !empty($_POST['id'])) {
     
     // Llamar a la función de eliminar
     eliminarAlumno($conexion, $id);
-    header("Location: ../php/listar_alumnos.php");
+    header("Location: listar_alumnos.php");
     exit();
 } else {
     echo "Error: No se proporcionó un ID válido";
