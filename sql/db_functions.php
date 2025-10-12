@@ -1,160 +1,180 @@
 <?php
+// Cambie la ruta a esto porque las relativas no funcionan si esta en php/alumno
+$current_dir = dirname(__FILE__);
+$config_dir = $current_dir . '/../config/';
 
-include '../config/config.php';
-include '../config/connect.php';
+include $config_dir . 'config.php';
+include $config_dir . 'connect.php';
 
-function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena){
-    $query = "INSERT INTO usuario(nombre, apellido, email, cargo, contrasena) VALUES (?,?,?,?,?)";
+function crearAlumno($conexion, $nombre, $apellido, $email, $cargo, $contrasenia){
+    $query = "INSERT INTO usuarios (nombre, apellido, email, cargo, contrasenia) VALUES (?,?,?,?,?)";
 
-    if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sssss", $nombre, $apellido, $email, $cargo, $contrasena);
+    if ($stmt = $conexion->prepare($query) ){
+        $stmt ->bind_param("sssss", $nombre, $apellido, $email, $cargo, $contrasenia);
 
-    
         if($stmt->execute()){
-            echo "Usuario creado correctamente";
-
+            echo "Alumno creado correctamente";
+            
             exit();
-        } else {
-            echo "Error al crear usuario: ". $stmt->error;
+        }else {
+            echo "Error al crear alumno: ". $stmt ->error;
+
         }
-    } else {
-        echo "Error: " . $query . "<br>" . $conexion->error;
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
+    }
+}
+
+function obtenerAlumnos($conexion){
+    $query = "SELECT * FROM usuarios";
+    if ($stmt = $conexion->prepare($query)){
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+            return $result;
+        }else {
+            echo "Error al obtener alumnos: " . $stmt->error;
+        }
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
     }
 }
 
 
-
-function editarUsuario($conexion, $id, $nombre, $apellido, $email, $cargo, $contrasena) {
-    $query = "UPDATE usuario SET nombre = ?, apellido = ?, email = ?, cargo = ?, contrasena = ? WHERE id = ?";
-    
-    if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sssssi", $nombre, $apellido, $email, $cargo, $contrasena, $id);
-
-        if ($stmt->execute()) {
-            echo "Usuario actualizado correctamente";
-            // Opcional: redirigir a la lista de alumnos
-            header("Location: listar_alumnos.php");
-            exit();
-        } else {
-            echo "Error al actualizar el usuario: " . $stmt->error;
-        }
-        
-        $stmt->close();
-    } else {
-        echo "Error al preparar la consulta: " . $conexion->error;
-    }
-}
-
-
-function obtenerAlumnos($conexion): array {
-    $sql = "SELECT * FROM alumnos";
-    $result = $conexion ->query($sql);
-    $alumnos = [];
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $alumnos[] = $row;
-        }
-    }
-    return $alumnos;
-}
-
-function eliminarAlumno($conexion, $id) {
-// Primero, elimina los registros relacionados en ficha_medica
-$sqlFicha = "DELETE FROM alumnos WHERE id = ?";
-if ($stmtFicha = $conexion->prepare($sqlFicha)) {
-    $stmtFicha->bind_param("i", $id);
-    $stmtFicha->execute();
-    $stmtFicha->close();
-    }
-
-    $sql = "DELETE FROM alumnos WHERE id = ?";
-    
-    // Preparar la sentencia
-    if ($stmt = $conexion->prepare($sql)) {
-        // Vincular el parámetro
+function eliminarAlumno($conexion, $id){
+    $query = "DELETE FROM usuarios WHERE id = ?";
+    if ($stmt = $conexion->prepare($query)){
         $stmt->bind_param("i", $id);
-        
-        // Ejecutar la consulta
-        if ($stmt->execute()) {
-            echo "alumno eliminada correctamente";
-        } else {
+        if($stmt->execute()){
+            echo "Alumno eliminado correctamente";
+        }else {
             echo "Error al eliminar alumno: " . $stmt->error;
         }
-        
-        // Cerrar la sentencia
-        $stmt->close();
-    } else {
-        echo "Error al preparar la consulta: " . $conexion->error;
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
     }
 }
-function crearInsumo($conexion, $nombre, $codigo, $categoria, $materia, $estado, $observacion){
-    $query = "INSERT INTO insumo(nombre, codigo, categoria, materia, estado, observacion) VALUES (?,?,?,?,?,?)";
 
-    if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("ssssss", $nombre, $codigo, $categoria, $materia, $estado, $observacion);
+function actualizarAlumno($conexion, $id, $nombre, $apellido, $email, $cargo){
+    echo $id;
+    $query = "UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, cargo = ? WHERE id = ?";
+    if ($stmt = $conexion->prepare($query)){
+        $stmt->bind_param("ssssi", $nombre, $apellido, $email, $cargo, $id);
+        if($stmt->execute()){
+            echo "Alumno actualizado correctamente con el id: " . $id;
+        }else {
+            echo "Error al actualizar alumno: " . $stmt->error;
+        }
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
+    }
+}
 
-    
+function obtenerAlumno($conexion, $id){
+    $query = "SELECT * FROM usuarios WHERE id = ?";
+    if ($stmt = $conexion->prepare($query)){
+        $stmt->bind_param("i", $id);
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();
+        }else {
+            echo "Error al obtener alumno: " . $stmt->error;
+        }
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
+    }
+}
+
+function obtenerUsuarioByEmail($conexion, $email){
+    $query = "SELECT * FROM usuarios WHERE email = ?";
+    if ($stmt = $conexion->prepare($query)){
+        $stmt->bind_param("s", $email);
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();
+        }else {
+            echo "Error al obtener usuario: " . $stmt->error;
+        }
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
+    }
+}
+
+//DB Functions Insumos
+
+function crearInsumo($conexion, $codigo, $nombre, $categoria, $carrera, $estado, $observaciones){
+    $query = "INSERT INTO insumos (codigo, nombre, categoria, carrera, estado, observaciones) VALUES (?,?,?,?,?,?)";
+
+    if ($stmt = $conexion->prepare($query) ){
+        $stmt ->bind_param("ssssss", $codigo, $nombre, $categoria, $carrera, $estado, $observaciones);
+
         if($stmt->execute()){
             echo "Insumo creado correctamente";
-
+            
             exit();
-        } else {
-            echo "Error al crear Insumo: ". $stmt->error;
+        }else {
+            echo "Error al crear insumo: ". $stmt ->error;
+
         }
-    } else {
-        echo "Error: " . $query . "<br>" . $conexion->error;
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
     }
 }
 
-function editarInsumo($conexion, $id_insumo, $nombre, $codigo, $categoria, $materia, $estado, $observacion) {
-    $query = "UPDATE insumo 
-              SET nombre = ?, codigo = ?, categoria = ?, materia = ?, estado = ?, observacion = ? 
-              WHERE id_insumo = ?";
-
-    if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("ssssssi", $nombre, $codigo, $categoria, $materia, $estado, $observacion, $id_insumo);
-
-        if ($stmt->execute()) {
-            echo "Insumo actualizado correctamente";
-            header("Location: ../php/insumos/listar_insumo.php");
-            exit();
-        } else {
-            echo "Error al actualizar el insumo: " . $stmt->error;
+function obtenerInsumos($conexion){
+    $query = "SELECT * FROM insumos";
+    if ($stmt = $conexion->prepare($query)){
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+            return $result;
+        }else {
+            echo "Error al obtener insumos: " . $stmt->error;
         }
-        $stmt->close();
-    } else {
-        echo "Error al preparar la consulta: " . $conexion->error;
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
     }
 }
 
 
-function obtenerInsumos($conexion): array {
-    $sql = "SELECT * FROM insumo";
-    $result = $conexion->query($sql);
-    $insumos = [];
-
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $insumos[] = $row;
-        }
-    }
-    return $insumos;
-}
-
-
-function eliminarInsumo($conexion, $id_insumo) {
-    $sql = "DELETE FROM insumo WHERE id_insumo = ?";
-
-    if ($stmt = $conexion->prepare($sql)) {
-        $stmt->bind_param("i", $id_insumo);
-
-        if ($stmt->execute()) {
+function eliminarInsumo($conexion, $id){
+    $query = "DELETE FROM insumos WHERE id = ?";
+    if ($stmt = $conexion->prepare($query)){
+        $stmt->bind_param("i", $id);
+        if($stmt->execute()){
             echo "Insumo eliminado correctamente";
-        } else {
-            echo "Error al eliminar el insumo: " . $stmt->error;
+        }else {
+            echo "Error al eliminar insumo: " . $stmt->error;
         }
-        $stmt->close();
-    } else {
-        echo "Error al preparar la consulta: " . $conexion->error;
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
+    }
+}
+
+function actualizarInsumo($conexion, $id, $nombre, $categoria, $carrera, $estado, $codigo, $observaciones){
+    echo $id;
+    $query = "UPDATE insumos SET codigo = ?, nombre = ?, categoria = ?, carrera = ?, estado = ?, observaciones = ? WHERE id = ?";
+    if ($stmt = $conexion->prepare($query)){
+        $stmt->bind_param("ssssssi", $codigo, $nombre, $categoria, $carrera, $estado, $observaciones, $id);
+        if($stmt->execute()){
+            echo "Insumo actualizado correctamente con el id: " . $id;
+        }else {
+            echo "Error al actualizar insumo: " . $stmt->error;
+        }
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
+    }
+}
+
+function obtenerInsumo($conexion, $id){
+    $query = "SELECT * FROM insumos WHERE id = ?";
+    if ($stmt = $conexion->prepare($query)){
+        $stmt->bind_param("i", $id);
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();
+        }else {
+            echo "Error al obtener insumo: " . $stmt->error;
+        }
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
     }
 }
