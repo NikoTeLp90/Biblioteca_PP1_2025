@@ -3,6 +3,14 @@
 require '../../config/connect.php';
 require '../../sql/db_functions.php';
 
+session_start();
+
+// INMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
+if (!isset($_SESSION['usuario'])) {
+    header("Location: ../login/login.php");
+    exit();
+}
+
 $insumos = obtenerInsumos($conexion);
 ?>
 
@@ -38,7 +46,7 @@ $insumos = obtenerInsumos($conexion);
                     <li class="nav-item"><a class="nav-link active" href="../../php/insumos/listar_insumos.php" id="linkInsumos">Insumos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../prestamos/prestamos.html" id="linkPrestamos">Préstamos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../../php/usuarios/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
-                    <li class="nav-item"><a class="nav-link" href="#" id="linkSalir">Salir</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../php/login/logout.php" id="linkSalir">Salir</a></li>
                     
                    
                 </ul>
@@ -87,8 +95,8 @@ $insumos = obtenerInsumos($conexion);
                 echo '<td>' . $insumo['estado'] . '</td>';
                 echo '<td>' . $insumo['observaciones'] . '</td>';
                 echo '<td>
-                        <a href="../php/editar_insumo.php?id=' . $insumo['id'] . '">Editar</a>
-                        <form action="../php/eliminar_insumo.php" method="POST" style="display:inline;">
+                        <a href="../insumos/editar_insumo.php?id=' . $insumo['id'] . '">Editar</a>
+                        <form action="../insumos/eliminar_insumo.php" method="POST" style="display:inline;">
                         <input type="hidden" name="id" value="' . $insumo['id'] . '">
                         <button type="submit" onclick="return confirm(\'¿Estás seguro de eliminar este insumo?\')">Eliminar</button>
                         </form>

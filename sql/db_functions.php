@@ -4,11 +4,11 @@
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/connect.php';
 
-function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena){
-    $query = "INSERT INTO usuario(nombre, apellido, email, cargo, contrasena) VALUES (?,?,?,?,?)";
+function crearUsuario($conexion, $nombre, $apellido, $dni, $email, $cargo, $contrasenia){
+    $query = "INSERT INTO usuario(nombre, apellido, dni, email, cargo, contrasenia) VALUES (?,?,?,?,?,?)";
 
     if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sssss", $nombre, $apellido, $email, $cargo, $contrasena);
+        $stmt->bind_param("ssssss", $nombre, $apellido, $dni, $email, $cargo, $contrasenia);
 
     
         if($stmt->execute()){
@@ -30,11 +30,11 @@ function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena
 
 
 
-function editarUsuario($conexion, $id, $nombre, $apellido, $email, $cargo, $contrasena) {
-    $query = "UPDATE usuario SET nombre = ?, apellido = ?, email = ?, cargo = ?, contrasena = ? WHERE id = ?";
+function editarUsuario($conexion, $id, $nombre, $apellido, $dni, $email, $cargo) {
+    $query = "UPDATE usuario SET nombre = ?, apellido = ?, dni = ?, email = ?, cargo = ? WHERE id = ?";
     
     if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sssssi", $nombre, $apellido, $email, $cargo, $contrasena, $id);
+        $stmt->bind_param("sssssi", $nombre, $apellido, $dni, $email, $cargo, $id);
 
 
         if ($stmt->execute()) {
@@ -49,6 +49,32 @@ function editarUsuario($conexion, $id, $nombre, $apellido, $email, $cargo, $cont
         $stmt->close();
     } else {
         echo "Error al preparar la consulta: " . $conexion->error;
+    }
+}
+
+function obtenerUsuarioPorEmail($conexion, $email){
+    $query = "SELECT * FROM usuario WHERE email = ?";
+    if ($stmt = $conexion->prepare($query)){
+        $stmt->bind_param("s", $email);
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();
+        }else {
+            echo "Error al obtener usuario: " . $stmt->error;
+        }
+    }else {
+        echo "Error " . $query . "<br>" . $conexion ->error;
+    }
+}
+
+function obtenerUsuarioPorId($conexion, $id){
+    $query = "SELECT * FROM usuario WHERE id = ?";
+    if ($stmt = $conexion->prepare($query)){
+        $stmt->bind_param("i", $id);
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();
+        }
     }
 }
 
@@ -71,16 +97,8 @@ function obtenerUsuarios($conexion): array {
     return $alumnos;
 }
 
-function eliminarAlumno($conexion, $id) {
-// Primero, elimina los registros relacionados en ficha_medica
-$sqlFicha = "DELETE FROM usuario WHERE id = ?";
-if ($stmtFicha = $conexion->prepare($sqlFicha)) {
-    $stmtFicha->bind_param("i", $id);
-    $stmtFicha->execute();
-    $stmtFicha->close();
-    }
-
-    $sql = "DELETE FROM alumnos WHERE id = ?";
+function eliminarUsuario($conexion, $id) {
+    $sql = "DELETE FROM usuario WHERE id = ?";
     
     // Preparar la sentencia
     if ($stmt = $conexion->prepare($sql)) {
@@ -89,9 +107,9 @@ if ($stmtFicha = $conexion->prepare($sqlFicha)) {
         
         // Ejecutar la consulta
         if ($stmt->execute()) {
-            echo "alumno eliminada correctamente";
+            echo "usuario eliminada correctamente";
         } else {
-            echo "Error al eliminar alumno: " . $stmt->error;
+            echo "Error al eliminar usuario: " . $stmt->error;
         }
         
         // Cerrar la sentencia
@@ -102,18 +120,15 @@ if ($stmtFicha = $conexion->prepare($sqlFicha)) {
 }
 // INSUMOS ------------------------
 
-function agregarInsumo($conexion, $nombre, $categoria, $disponibilidad, $estado, $observaciones) {
-    $query = "INSERT INTO insumo (nombre, categoria, disponibilidad, estado, observaciones) VALUES (?,?,?,?,?)";
+function agregarInsumo($conexion, $codigo, $nombre, $categoria, $disponibilidad, $estado, $observaciones) {
+    $query = "INSERT INTO insumo (codigo, nombre, categoria, disponibilidad, estado, observaciones) VALUES (?,?,?,?,?,?)";
 
     if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("sssss", $nombre, $categoria, $disponibilidad, $estado, $observaciones); // bindear (apunta) para asegurar que los elementos sean los correctos "sss" es string-string-string
+        $stmt->bind_param("ssssss", $codigo, $nombre, $categoria, $disponibilidad, $estado, $observaciones); // bindear (apunta) para asegurar que los elementos sean los correctos "sss" es string-string-string
 
         if ($stmt->execute()) {
-            echo "Insumo cargado correctamente";
-            echo '<br>';
-            echo '<a href="../index.html">Ir al Index</button>';
-            echo '<br>';
-            echo '<a href="listar_insumos.php">Ver insumos</a>';
+            echo "Insumo creado correctamente";
+            header("Location: listar_insumos.php");
             exit();
         } else {
             echo "Error al cargar insumo: ". $stmt->error;

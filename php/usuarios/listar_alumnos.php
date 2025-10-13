@@ -2,6 +2,14 @@
 require '../../config/connect.php';
 require '../../sql/db_functions.php';
 
+session_start();
+
+// INMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
+if (!isset($_SESSION['usuario'])) {
+    header("Location: ../login/login.php");
+    exit();
+}
+
 $alumnos = obtenerUsuarios($conexion);
 ?>
 
@@ -42,7 +50,7 @@ $alumnos = obtenerUsuarios($conexion);
                 <a class="nav-link" href="../../php/usuarios/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" id="linkSalir">Salir</a>
+                <a class="nav-link" href="../../php/login/logout.php" id="linkSalir">Salir</a>
             </li>
             </ul>
         </div>
@@ -77,8 +85,8 @@ $alumnos = obtenerUsuarios($conexion);
                 echo '<td>' . $alumno['email'] . '</td>';
                 echo '<td>' . $alumno['cargo'] . '</td>';
                 echo '<td>
-                        <a href="../php/editar_alumno.php?id=' . $alumno['id'] . '">Editar</a>
-                        <form action="../php/eliminar_alumno.php" method="POST" style="display:inline;">
+                        <a href="../usuarios/editar_alumno.php?id=' . $alumno['id'] . '">Editar</a>
+                        <form action="../usuarios/eliminar_alumno.php" method="POST" style="display:inline;">
                             <input type="hidden" name="alumno_id" value="' . $alumno['id'] . '">
                             <button type="submit" onclick="return confirm(\'¿Esta seguro que desea eliminar? a el ' .$alumno['cargo'].' ' .$alumno['nombre'] . '\')">Eliminar</button>
                         </form>

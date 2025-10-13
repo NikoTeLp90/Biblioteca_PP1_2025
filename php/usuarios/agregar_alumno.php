@@ -1,32 +1,33 @@
 <?php
 
-#session_start();
+session_start();
 
 // INMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
-// if (!isset($_SESSION['usuario'])) {
-//     header("Location: ../login/login.php");
-//     exit();
-// }
+if (!isset($_SESSION['usuario'])) {
+     header("Location: ../login/login.php");
+     exit();
+ }
 
 include '../../sql/db_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $nombre = trim($_POST["nombre"]);
   $apellido = trim($_POST["apellido"]);
+  $dni = trim($_POST["dni"]);
   $email = trim($_POST["email"]);
   $cargo = trim($_POST["cargo"]);
-  $contrasena = trim($_POST["contrasena"]);
+  $contrasenia = trim($_POST["contrasenia"]);
 
   // Validación mínima en servidor: la contraseña no puede estar vacía
-  if (empty($contrasena)) {
+  if (empty($contrasenia)) {
     header('Content-Type: application/json; charset=utf-8');
     http_response_code(400);
     echo json_encode(["success" => false, "message" => "La contraseña es requerida"]);
     exit;
   }
 
-  $contrasena = password_hash($contrasena, PASSWORD_DEFAULT);
-  crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena);
+  $contrasenia = password_hash($contrasenia, PASSWORD_DEFAULT);
+  crearUsuario($conexion, $nombre, $apellido, $dni, $email, $cargo, $contrasenia);
 }
   #exit();
 
@@ -73,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a class="nav-link" href="../php/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" id="linkSalir">Salir</a>
+          <a class="nav-link" href="../../php/login/logout.php" id="linkSalir">Salir</a>
           </li>
         </ul>
       </div>
@@ -109,15 +110,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="cargo" class="form-label fw-bold">Cargo</label>
         <select class="form-select border-dark" id="cargo" name="cargo" required>
           <option selected disabled>Seleccionar</option>
-          <option>Bibliotecario</option>
-          <option>Secretario</option>
-          <option>Admin</option>
+          <option value="bibliotecario">Bibliotecario</option>
+          <option value="secretario">Secretario</option>
+          <option value="admin">Admin</option>
         </select>
       </div>
 
       <div class="mb-3">
-        <label for="contrasena" class="form-label fw-bold">Contraseña</label>
-        <input type="password" class="form-control" id="altaPassword" name="contrasena" required>
+        <label for="contrasenia" class="form-label fw-bold">Contraseña</label>
+        <input type="password" class="form-control" id="contrasenia" name="contrasenia" required>
       </div>
 
       <div class="mb-3">

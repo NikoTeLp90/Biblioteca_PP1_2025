@@ -1,17 +1,25 @@
 <?php
 
-require '../../config/connect.php';
 require '../../sql/db_functions.php';
+
+session_start();
+
+// INMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
+if (!isset($_SESSION['usuario'])) {
+    header("Location: ../login/login.php");
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
+    $codigo = trim($_POST["codigo"]);
     $categoria = trim($_POST["categoria"]);
     $disponibilidad = trim($_POST["disponibilidad"]);
     $estado = trim($_POST["estado"]);
     $observaciones = trim($_POST["observaciones"]);
 
     // agregarInsumo($conexion, $codigo, $nombre, $categoria, $disponibilidad, $estado, $observaciones);
-    agregarInsumo($conexion, $nombre, $categoria, $disponibilidad, $estado, $observaciones);
+    agregarInsumo($conexion, $codigo, $nombre, $categoria, $disponibilidad, $estado, $observaciones);
 }
 
 ?>
@@ -47,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <li class="nav-item"><a class="nav-link active" href="../php/listar_insumos.php" id="linkInsumos">Insumos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../prestamos/prestamos.html" id="linkPrestamos">Préstamos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../../php/usuarios/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
-                    <li class="nav-item"><a class="nav-link" href="#" id="linkSalir">Salir</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../php/login/logout.php" id="linkSalir">Salir</a></li>
                     
                    
                 </ul>
@@ -85,6 +93,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <!-- Contenedor donde se agregarán filas dinámicas para cada unidad -->
                     <div class="col-12">
                         <div id="unidadesContainer" class="mt-3"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Codigo</label>
+                        <input type="text" id="codigo" class="form-control" name="codigo" required>
                     </div>
                       <div class="col-md-6">
                         <label class="form-label fw-bold">Estado</label>

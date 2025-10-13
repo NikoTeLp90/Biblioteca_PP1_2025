@@ -5,12 +5,12 @@ include '../../sql/db_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $email = trim($_POST["email"]);
-    $contrasena = trim($_POST["contrasena"]);
-    $usuario = obtenerUsuarioByEmail($conexion, $email);
+    $contrasenia = trim($_POST["contrasenia"]);
+    $usuario = obtenerUsuarioPorEmail($conexion, $email);
     if($usuario){
-        if(password_verify($contrasenia, $usuario['contrasena'])){
+        if(password_verify($contrasenia, $usuario['contrasenia'])){
             $_SESSION['usuario'] = $usuario;
-            header("Location: ../bienvenido.php");
+            header("Location: ../../index.html");
         }else{
             $_SESSION['error'] = "Contraseña incorrecta";
             header("Location: ../error.php");
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label fw-bold">Contraseña *</label>
-                            <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Ingrese su clave" required>
+                            <input type="password" class="form-control" id="contrasenia" name="contrasenia" placeholder="Ingrese su clave" required>
                             <p id="parrafo"> </p>
                         </div>
                         <button type="submit" class="btn btn-dark w-100 my-3 fw-bold">Acceder</button>

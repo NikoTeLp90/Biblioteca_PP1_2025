@@ -2,6 +2,6 @@
 $server = 'localhost';
 $db_user = 'root';
 $db_password = '';
-$db_name = 'biblioprueba';
+$db_name = 'biblioteca';
 
 ?>
