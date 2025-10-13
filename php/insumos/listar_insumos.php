@@ -1,7 +1,7 @@
 <?php
 
-require '../config/connect.php';
-require '../sql/db_functions.php';
+require '../../config/connect.php';
+require '../../sql/db_functions.php';
 
 $insumos = obtenerInsumos($conexion);
 ?>
@@ -13,7 +13,7 @@ $insumos = obtenerInsumos($conexion);
     </head>
     <body>
 
-    <button type="button" onclick="window.location.href='../index.html';">Ir al Index</button>
+    <button type="button" onclick="window.location.href='../../index.html';">Ir al Index</button>
     <br><br>
 
     <table border="2">
@@ -38,8 +38,8 @@ $insumos = obtenerInsumos($conexion);
                 echo '<td>' . $insumo['estado'] . '</td>';
                 echo '<td>' . $insumo['observaciones'] . '</td>';
                 echo '<td>
-                        <a href="../php/editar_insumo.php?id=' . $insumo['id'] . '">Editar</a>
-                        <form action="../php/eliminar_insumo.php" method="POST" style="display:inline;">
+                        <a href="editar_insumo.php?id=' . $insumo['id'] . '">Editar</a>
+                        <form action="eliminar_insumo.php" method="POST" style="display:inline;">
                         <input type="hidden" name="id" value="' . $insumo['id'] . '">
                         <button type="submit" onclick="return confirm(\'¿Estás seguro de eliminar este insumo?\')">Eliminar</button>
                         </form>

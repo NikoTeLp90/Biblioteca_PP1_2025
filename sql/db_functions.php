@@ -1,6 +1,6 @@
 <?php
 
-require '../config/connect.php';
+// require '../config/connect.php';
 
 // USUARIOS ------------------------
 
@@ -13,7 +13,7 @@ function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasena
         if ($stmt->execute()) {
             echo "Usuario creado correctamente";
             echo '<br>';
-            echo '<a href="../index.html">Ir al Index</button>';
+            echo '<a href="../../index.html">Ir al Index</button>';
             echo '<br>';
             echo '<a href="listar_usuarios.php">Ver usuarios</a>';
             exit();
@@ -92,7 +92,7 @@ function agregarInsumo($conexion, $nombre, $categoria, $disponibilidad, $estado,
         if ($stmt->execute()) {
             echo "Insumo cargado correctamente";
             echo '<br>';
-            echo '<a href="../index.html">Ir al Index</button>';
+            echo '<a href="../../index.html">Ir al Index</button>';
             echo '<br>';
             echo '<a href="listar_insumos.php">Ver insumos</a>';
             exit();
@@ -159,4 +159,7 @@ function eliminarInsumo($conexion, $id) {
         echo "Error al preparar la consulta: " . $conexion->error;
     }
 }
+
+
+// PRESTAMO ------------------------
 ?>

@@ -1,5 +1,7 @@
 <?php
-require '../sql/db_functions.php';
+
+require '../../config/connect.php';
+require '../../sql/db_functions.php';
 
 $usuarios = obtenerUsuarios($conexion);
 ?>
@@ -11,7 +13,7 @@ $usuarios = obtenerUsuarios($conexion);
     </head>
     <body>
 
-    <button type="button" onclick="window.location.href='../index.html';">Ir al Index</button>
+    <button type="button" onclick="window.location.href='../../index.html';">Ir al Index</button>
     <br><br>
 
     <table border="2">
@@ -35,8 +37,8 @@ $usuarios = obtenerUsuarios($conexion);
                 echo '<td>' . $usuario['email'] . '</td>';
                 echo '<td>' . $usuario['cargo'] . '</td>';
                 echo '<td>
-                        <a href="../php/editar_usuario.php?id=' . $usuario['id'] . '">Editar</a>
-                        <form action="../php/eliminar_usuario.php" method="POST" style="display:inline;">
+                        <a href="editar_usuario.php?id=' . $usuario['id'] . '">Editar</a>
+                        <form action="eliminar_usuario.php" method="POST" style="display:inline;">
                         <input type="hidden" name="id" value="' . $usuario['id'] . '">
                         <button type="submit" onclick="return confirm(\'¿Estás seguro de eliminar este usuario?\')">Eliminar</button>
                         </form>
