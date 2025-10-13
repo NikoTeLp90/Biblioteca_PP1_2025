@@ -1,12 +1,13 @@
 <?php
 
-session_start();
+//COMENTE ESTE BLOQUE PARA PODER AGREGAR USUARIOS SIN ESTAR LOGUEADO
+//session_start();
 
 // INMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
-if (!isset($_SESSION['usuario'])) {
-     header("Location: ../login/login.php");
-     exit();
- }
+//if (!isset($_SESSION['usuario'])) {
+ //    header("Location: ../login/login.php");
+  //    exit();
+  // }
 
 include '../../sql/db_functions.php';
 
