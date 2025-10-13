@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     <div class="container-fluid d-flex justify-content-center align-items-center vh-100 p-0">
         <div class="row m-0 w-100 shadow-lg login-box">
             <div class="col-md-4 bg-dark text-white d-flex flex-column justify-content-center align-items-center p-4 text-center">
-                <img src="multimedia/logo i12 fondo blanco.png" alt="Instituto Superior de Formación Técnica N°12" class="img-fluid mb-3 logo-img">
+                <img src="../../src/img/logo i12 fondo blanco.png" alt="Instituto Superior de Formación Técnica N°12" class="img-fluid mb-3 logo-img">
                 <p class="h6 fw-normal">INSTITUTO SUPERIOR DE FORMACION TECNICA N°12</p>
             </div>
             

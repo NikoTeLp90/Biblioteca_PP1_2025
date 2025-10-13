@@ -25,7 +25,7 @@ $alumnos = obtenerUsuarios($conexion);
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
         <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
-            <img src="../src/img/logo i12 fondo blanco.png" alt="Logo" class="d-inline-block align-text-top me-2"
+            <img src="../../src/img/logo i12 fondo blanco.png" alt="Logo" class="d-inline-block align-text-top me-2"
             style="height: 40px" />
             Instituto Superior de Formación Técnica Nº 12
         </a>

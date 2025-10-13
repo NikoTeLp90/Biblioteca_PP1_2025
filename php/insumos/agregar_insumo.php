@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="../multimedia/logo i12 fondo blanco.png" alt="Logo" class="d-inline-block align-text-top me-2" style="height: 40px;">
+                <img src="../../src/img/logo i12 fondo blanco.png" alt="Logo" class="d-inline-block align-text-top me-2" style="height: 40px;">
                 Instituto Superior de Formación Técnica Nº 12 
             </a>
 
@@ -52,10 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link" href="../../index.html" id="linkInicio">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="../php/listar_insumos.php" id="linkInsumos">Insumos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="../insumos/listar_insumos.php" id="linkInsumos">Insumos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../prestamos/prestamos.html" id="linkPrestamos">Préstamos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../../php/usuarios/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
-                    <li class="nav-item"><a class="nav-link" href="../../php/login/logout.php" id="linkSalir">Salir</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../usuarios/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
+                    <li class="nav-item"><a class="nav-link" href="../../login/logout.php" id="linkSalir">Salir</a></li>
                     
                    
                 </ul>
