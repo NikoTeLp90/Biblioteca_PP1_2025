@@ -1,6 +1,7 @@
 <?php
 
-require '../sql/db_functions.php';
+require '../../config/connect.php';
+require '../../sql/db_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
@@ -42,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
   ?>
 
-  <form action="../php/agregar_usuario.php" method="post">
+  <form action="agregar_usuario.php" method="post">
 
     <label for="nombre">Nombre:</label><br>
     <input type="text" name="nombre" placeholder="Ingrese un nombre" required>
