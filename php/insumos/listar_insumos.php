@@ -4,6 +4,11 @@ require '../../config/connect.php';
 require '../../sql/db_functions.php';
 
 $insumos = obtenerInsumos($conexion);
+if (isset($_GET['json'])) {
+    header('Content-Type: application/json');
+    echo json_encode($insumos);
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
