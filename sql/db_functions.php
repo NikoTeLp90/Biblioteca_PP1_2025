@@ -2,7 +2,26 @@
 include '../config/config.php';
 include '../config/connect.php';
 
-function crearEj1($conexion, $nombre, $apellido, $email, $cargo, $contrasenia) {
+function agregarInsumo($conexion, $nombre, $codigo, $categoria, $estado_conservacion, $disponibilidad,$observacion) {
+    $query ="INSERT INTO insumo(nombre, codigo, categoria, estado_conservacion, disponibilidad,observacion) VALUE (?,?,?,?,?,?)";
+
+    if ($stmt = $conexion->prepare($query)) {
+        $stmt->bind_param("sss", $nombre, $codigo, $categoria, $estado_conservacion, $disponibilidad,$observacion);
+
+        if ($stmt->execute()) {
+            echo "Insumo creado correctamente";
+            exit();
+        }else{
+            echo "error al crear ejercicio 1: ". $stmt->error;
+        }
+        
+    }else{
+            echo "error al crear ejercicio 1: ".$query."<br>". $conexion->error;
+    }
+}
+
+
+function crearUsuario($conexion, $nombre, $apellido, $email, $cargo, $contrasenia) {
     $query ="INSERT INTO usuario(nombre, apellido, email, cargo, contrasenia) VALUE (?,?,?,?,?)";
 
     if ($stmt = $conexion->prepare($query)) {
