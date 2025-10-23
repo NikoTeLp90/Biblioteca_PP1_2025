@@ -12,14 +12,30 @@ if (!isset($_SESSION['usuario'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
-    $codigo = trim($_POST["codigo"]);
+    $cantidad = trim($_POST["cantidad"]);
     $categoria = trim($_POST["categoria"]);
     $disponibilidad = trim($_POST["disponibilidad"]);
     $estado = trim($_POST["estado"]);
     $observaciones = trim($_POST["observaciones"]);
 
-    // agregarInsumo($conexion, $codigo, $nombre, $categoria, $disponibilidad, $estado, $observaciones);
-    agregarInsumo($conexion, $codigo, $nombre, $categoria, $disponibilidad, $estado, $observaciones);
+    $exitosos = 0;
+    $errores = 0;
+
+    for ($i = 0; $i < $cantidad; $i++) {
+        if (agregarInsumo($conexion, $nombre, $categoria, $disponibilidad, $estado, $observaciones)) {
+            $exitosos++;
+        } else {
+            $errores++;
+        }
+    }
+
+    if ($errores == 0) {
+        $mensaje = "Se agregaron correctamente $exitosos insumo(s)";
+        $tipo_mensaje = "success";
+    } else {
+        $mensaje = "Se agregaron $exitosos insumo(s) correctamente, pero hubo $errores error(es)";
+        $tipo_mensaje = "warning";
+    }
 }
 
 ?>
@@ -31,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Insumos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../../src/css/styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" defer></script>
 
@@ -51,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" href="../../index.html" id="linkInicio">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../index.php" id="linkInicio">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link active" href="../insumos/listar_insumos.php" id="linkInsumos">Insumos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../prestamos/prestamos.html" id="linkPrestamos">Préstamos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../../usuarios/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
@@ -94,26 +110,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col-12">
                         <div id="unidadesContainer" class="mt-3"></div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Codigo</label>
-                        <input type="text" id="codigo" class="form-control" name="codigo" required>
-                    </div>
                       <div class="col-md-6">
-                        <label class="form-label fw-bold">Estado</label>
+                        <label class="form-label fw-bold">Disponibilidad</label>
                         <select class="form-select" id="estado" name="disponibilidad" required>
                             <option value="">Seleccionar</option>
-                            <option value="Disponible">Disponible</option>
-                            <option value="En Reparacion">En Reparación</option>
-                            <option value="Fuera de Servicio">Fuera de Servicio</option>
+                            <option value="disponible">Disponible</option>
+                            <option value="en_reparacion">En Reparación</option>
+                            <option value="fuera_servicio">Fuera de Servicio</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Estado</label>
                         <select class="form-select" id="estado" name="estado" required>
                             <option value="">Seleccionar</option>
-                            <option value="Disponible">Disponible</option>
-                            <option value="En Reparacion">En Prestamo</option>
-                            <option value="Fuera de Servicio">Baja</option>
+                            <option value="disponible">Disponible</option>
+                            <option value="en_prestamo">En Prestamo</option>
+                            <option value="baja">Baja</option>
                         </select>
                     </div>
                     <div class="col-12">
@@ -122,7 +134,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
 
-                <div id="mensaje" class="mt-3"></div>
+                <div id="mensaje" class="mt-3">
+                    <?php if (isset($mensaje)): ?>
+                        <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
+                            <?php echo htmlspecialchars($mensaje); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
                 <div class="mt-4 d-flex justify-content-center">
                     <button type="submit" class="btn btn-danger me-2">Guardar Insumo</button>
@@ -132,6 +151,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
-    <script src="nuevoInsumo.js" type="module"></script>
 </body>
 </html>

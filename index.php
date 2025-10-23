@@ -1,4 +1,13 @@
 <?php
+
+session_start();
+
+// INMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
+if (!isset($_SESSION['usuario'])) {
+    header("Location: ./php/login/login.php");
+    exit();
+}
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -14,6 +23,10 @@ try {
     if ($insumos === false) {
         throw new Exception("Error al obtener insumos");
     }
+    
+    // Mensajes de creacion de prestamos o errores
+    $mensaje = isset($_GET['mensaje']) ? $_GET['mensaje'] : '';
+    $tipo_mensaje = isset($_GET['tipo']) ? $_GET['tipo'] : '';
     
     if (isset($_GET['json'])) {
         header('Content-Type: application/json');
@@ -35,7 +48,7 @@ try {
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="src/css/styles.css" />
+    <link rel="stylesheet" href="./src/css/styles.css" />
     <!-- <script src="home.js" defer></script> -->
   </head>
   <body>
@@ -66,7 +79,7 @@ try {
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-              <a class="nav-link" href="index.html" id="linkInicio">Inicio</a>
+              <a class="nav-link" href="index.php" id="linkInicio">Inicio</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="php/insumos/listar_insumos.php" id="linkInsumos"
@@ -83,7 +96,7 @@ try {
                 >Usuarios</a>
             
             <li class="nav-item">
-              <a class="nav-link" href="#" id="linkUsuarios">salir</a>
+              <a class="nav-link" href="php/login/logout.php" id="linkUsuarios">Salir</a>
             </li>
           </ul>
         </div>
@@ -122,6 +135,13 @@ try {
         </div>
       </div>
 
+      <?php if (!empty($mensaje)): ?>
+        <div class="alert alert-<?php echo $tipo_mensaje; ?> alert-dismissible fade show" role="alert">
+          <?php echo htmlspecialchars($mensaje); ?>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <?php endif; ?>
+
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>Listado de insumos</h3>
         <button
@@ -156,24 +176,33 @@ try {
             id="inputBuscar"
             name="buscar"
             placeholder="Buscar..."
+            onchange="filtrarInsumos()"
           />
         </div>
         <div class="col-md-2">
-          <select class="form-select" id="selectCategoria" name="categoria">
-            <option selected>Categoría</option>
+          <select class="form-select" id="selectCategoria" name="categoria" onchange="filtrarInsumos()">
+            <option selected value="">Categoría</option>
+            <option value="Tecnología">Tecnología</option>
+            <option value="Bibliografía">Bibliografía</option>
+            <option value="Eléctrico">Eléctrico</option>
+            <option value="Otro">Otro</option>
           </select>
         </div>
         <div class="col-md-2">
-          <select class="form-select" id="selectEstado" name="estado">
-            <option selected>Estado</option>
-            <option value="disponible">Disponible</option>
-            <option value="prestado">Prestado</option>
-            <option value="reparacion">En reparación</option>
+          <select class="form-select" id="selectDisponibilidad" name="disponibilidad" onchange="filtrarInsumos()">
+            <option selected value="">Disponibilidad</option>
+            <option value="Disponible">Disponible</option>
+            <option value="En Reparación">En Reparación</option>
+            <option value="Fuera de Servicio">Fuera de Servicio</option>
           </select>
         </div>
+
         <div class="col-md-2">
-          <select class="form-select" id="selectUbicacion" name="ubicacion">
-            <option selected>Ubicación</option>
+          <select class="form-select" id="selectEstado" name="estado" onchange="filtrarInsumos()">
+            <option selected value="">Estado</option>
+            <option value="Disponible">Disponible</option>
+            <option value="En Préstamo">En Préstamo</option>
+            <option value="Dado de Baja">Dado de Baja</option>
           </select>
         </div>
       </div>
@@ -194,18 +223,23 @@ try {
           </thead>
           <tbody>
           <?php foreach ($insumos as $insumo): ?>
-            <tr>
+
+            <!-- data-categoria, data-disponibilidad, data-estado, data-nombre son para filtrar los insumos -->
+            <tr data-categoria="<?php echo htmlspecialchars($insumo['categoria']); ?>"
+               data-disponibilidad="<?php echo htmlspecialchars($insumo['disponibilidad']); ?>"
+               data-estado="<?php echo htmlspecialchars($insumo['estado']); ?>"
+               data-nombre="<?php echo htmlspecialchars(strtolower($insumo['nombre'])); ?>">
               <td><?php echo htmlspecialchars($insumo['id']); ?></td>
               <td><?php echo htmlspecialchars($insumo['nombre']); ?></td>
               <td><?php echo htmlspecialchars($insumo['categoria']); ?></td>
-              <td><?php echo htmlspecialchars($insumo['disponibilidad']); ?></td>
-              <td><?php echo htmlspecialchars($insumo['estado']); ?></td>
+              <td data-disponibilidad="<?php echo htmlspecialchars($insumo['disponibilidad']); ?>"><?php echo htmlspecialchars($insumo['disponibilidad']); ?></td>
+              <td data-estado="<?php echo htmlspecialchars($insumo['estado']); ?>"><?php echo htmlspecialchars($insumo['estado']); ?></td>
               <td><?php echo htmlspecialchars($insumo['observaciones']); ?></td>
               <td>
                 <div class="btn-group" role="group">
-                  <button type="button" class="btn btn-sm btn-outline-primary btn-seleccionar" onclick="toggleSeleccion(this)" data-insumo='<?php echo json_encode($insumo); ?>' data-selected="false">
-                    Seleccionar
-                  </button>
+                <button type="button" class="btn btn-sm btn-outline-primary btn-seleccionar d-none" onclick="toggleSeleccion(this)" data-insumo='<?php echo json_encode($insumo); ?>' data-selected="false" 
+                <?php if (strtolower($insumo['disponibilidad']) !== 'disponible' || strtolower($insumo['estado']) !== 'disponible'): ?>disabled<?php endif; ?>>
+                    Seleccionar</button>  
                 </div>
               </td>
             </tr>
@@ -221,6 +255,31 @@ try {
 
 
     <script>
+function filtrarInsumos() {
+    const categoria = document.getElementById('selectCategoria')?.value || '';
+    const disponibilidad = document.getElementById('selectDisponibilidad')?.value || '';
+    const estado = document.getElementById('selectEstado')?.value || '';
+    const busqueda = document.getElementById('inputBuscar')?.value.toLowerCase() || '';
+
+    const filas = document.querySelectorAll('tbody tr');
+
+    filas.forEach((fila, index) => {
+        const filaCategoria = fila.cells[2].textContent.trim();
+        const filaDisponibilidad = fila.cells[3].textContent.trim();
+        const filaEstado = fila.cells[4].textContent.trim();
+        const filaNombre = fila.cells[1].textContent.toLowerCase();
+        
+        const mostrar = (categoria === '' || filaCategoria === categoria) &&
+                       (disponibilidad === '' || filaDisponibilidad === disponibilidad) &&
+                       (estado === '' || filaEstado === estado) &&
+                       (busqueda === '' || filaNombre.includes(busqueda));
+        
+        
+        fila.style.display = mostrar ? '' : 'none';
+    });
+}
+
+
       document.addEventListener('DOMContentLoaded', function() {
         const modalEl = document.getElementById('modalPrestamo');
         const checklistEl = document.getElementById('insumosChecklist');
@@ -327,10 +386,6 @@ try {
               <div class="mb-3">
                 <label for="inputDestinatario" class="form-label">Destinatario</label>
                 <input type="text" class="form-control" id="inputDestinatario" required>
-              </div>
-              <div class="mb-3">
-                <label for="inputFechaLimite" class="form-label">Fecha límite</label>
-                <input type="date" class="form-control" id="inputFechaLimite" required>
               </div>
               <button type="submit" class="btn btn-danger w-100">
                 Confirmar préstamo
@@ -462,16 +517,20 @@ try {
         e.preventDefault();
         
         const destinatario = document.getElementById('inputDestinatario').value;
-        const fechaLimite = document.getElementById('inputFechaLimite').value;
         
         const prestamo = {
           insumos: Array.from(insumosSeleccionados.values()),
           destinatario: destinatario,
-          fechaLimite: fechaLimite
         };
         
         console.log('Procesando préstamo:', prestamo);
         
+        // Redirigir a agregar_prestamo.php con los datos para crear el prestamo
+        const insumosIds = prestamo.insumos.map(insumo => insumo.id).join(',');
+        //Le paso por parametro el destinatario y los insumos seleccionados para crear el prestamo
+        const url = `php/prestamo/agregar_prestamo.php?destinatario=${encodeURIComponent(destinatario)}&insumos=${insumosIds}`;
+        window.location.href = url;
+
 
         const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmarPrestamo'));
         modal.hide();

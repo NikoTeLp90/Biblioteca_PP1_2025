@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $dni = trim($_POST["dni"]);
   $email = trim($_POST["email"]);
   $cargo = trim($_POST["cargo"]);
-  $contrasenia = trim($_POST["contrasenia"]);
+  $contrasenia = trim($_POST["altaPassword"]);
 
   // Validación mínima en servidor: la contraseña no puede estar vacía
   if (empty($contrasenia)) {
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <a class="nav-link" href="../index.html" id="linkInicio">Inicio</a>
+            <a class="nav-link" href="../index.php" id="linkInicio">Inicio</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="../php/listar_insumos.php" id="linkInsumos">Insumos</a>
@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       <div class="mb-3">
         <label for="dni" class="form-label fw-bold">DNI</label>
-        <input type="number" class="form-control" id="dni" required>
+        <input type="text" class="form-control" id="dni" name="dni" required>
       </div>
 
       <div class="mb-3">
@@ -118,8 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
 
       <div class="mb-3">
-        <label for="contrasenia" class="form-label fw-bold">Contraseña</label>
-        <input type="password" class="form-control" id="contrasenia" name="contrasenia" required>
+        <label for="altaPassword" class="form-label fw-bold">Contraseña</label>
+        <input type="password" class="form-control" id="altaPassword" name="altaPassword" required>
       </div>
 
       <div class="mb-3">

@@ -4,6 +4,29 @@
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/connect.php';
 
+$GLOBALS['constantes'] = [
+    'disponible' => 'Disponible',
+    'en_reparacion' => 'En Reparación',
+    'fuera_servicio' => 'Fuera de Servicio',
+    'en_prestamo' => 'En Préstamo',
+    'baja' => 'Dado de Baja',
+    'tecnologia' => 'Tecnología',
+    'bibliografia' => 'Bibliografía',
+    'electrico' => 'Eléctrico',
+    'otro' => 'Otro'
+];
+
+// Función para obtener la etiqueta
+function getEtiqueta($clave) {
+    return $GLOBALS['constantes'][$clave] ?? 'Desconocido';
+}
+
+function getClave($etiqueta) {
+    return array_search($etiqueta, $GLOBALS['constantes']) ?? '';
+}
+
+
+//Funciones para crear, editar, eliminar y obtener usuarios
 function crearUsuario($conexion, $nombre, $apellido, $dni, $email, $cargo, $contrasenia){
     $query = "INSERT INTO usuario(nombre, apellido, dni, email, cargo, contrasenia) VALUES (?,?,?,?,?,?)";
 
@@ -52,10 +75,10 @@ function editarUsuario($conexion, $id, $nombre, $apellido, $dni, $email, $cargo)
     }
 }
 
-function obtenerUsuarioPorEmail($conexion, $email){
-    $query = "SELECT * FROM usuario WHERE email = ?";
+function obtenerUsuarioPorDni($conexion, $dni){
+    $query = "SELECT * FROM usuario WHERE dni = ?";
     if ($stmt = $conexion->prepare($query)){
-        $stmt->bind_param("s", $email);
+        $stmt->bind_param("s", $dni);
         if($stmt->execute()){
             $result = $stmt->get_result();
             return $result->fetch_assoc();
@@ -120,21 +143,21 @@ function eliminarUsuario($conexion, $id) {
 }
 // INSUMOS ------------------------
 
-function agregarInsumo($conexion, $codigo, $nombre, $categoria, $disponibilidad, $estado, $observaciones) {
-    $query = "INSERT INTO insumo (codigo, nombre, categoria, disponibilidad, estado, observaciones) VALUES (?,?,?,?,?,?)";
+function agregarInsumo($conexion, $nombre, $categoria, $disponibilidad, $estado, $observaciones) {
+    $query = "INSERT INTO insumo (nombre, categoria, disponibilidad, estado, observaciones) VALUES (?,?,?,?,?)";
 
     if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("ssssss", $codigo, $nombre, $categoria, $disponibilidad, $estado, $observaciones); // bindear (apunta) para asegurar que los elementos sean los correctos "sss" es string-string-string
+        $stmt->bind_param("sssss", $nombre, $categoria, $disponibilidad, $estado, $observaciones); // bindear (apunta) para asegurar que los elementos sean los correctos "sssss" es string-string-string-string-string
 
         if ($stmt->execute()) {
-            echo "Insumo creado correctamente";
-            header("Location: listar_insumos.php");
-            exit();
+            $stmt->close();
+            return true;
         } else {
-            echo "Error al cargar insumo: ". $stmt->error;
+            $stmt->close();
+            return false;
         }
     } else {
-        echo "Error: " . $query . "<br>" . $conexion->error;
+        return false;
     }
 }
 
@@ -165,6 +188,9 @@ function obtenerInsumos($conexion): array {
     $insumos = [];
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
+            $row['disponibilidad'] = getEtiqueta($row['disponibilidad']);
+            $row['estado'] = getEtiqueta($row['estado']);
+            $row['categoria'] = getEtiqueta($row['categoria']);
             $insumos[] = $row;
         }
     }
@@ -194,4 +220,22 @@ function eliminarInsumo($conexion, $id) {
     }
 }
 
+// PRESTAMOS ------------------------
+function agregarPrestamo($conexion, $insumo_id, $destinatario) {
+    $query = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?,?)";
+
+    if ($stmt = $conexion->prepare($query)) {
+        $stmt->bind_param("is", $insumo_id, $destinatario); 
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true;
+        } else {
+            $stmt->close();
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
 ?>

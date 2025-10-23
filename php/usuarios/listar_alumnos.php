@@ -38,7 +38,7 @@ $alumnos = obtenerUsuarios($conexion);
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-                <a class="nav-link" href="../../index.html" id="linkInicio">Inicio</a>
+                <a class="nav-link" href="../../index.php" id="linkInicio">Inicio</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../../php/insumos/listar_insumos.php" id="linkInsumos">Insumos</a>

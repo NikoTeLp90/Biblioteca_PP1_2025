@@ -4,9 +4,9 @@ session_start();
 include '../../sql/db_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
-    $email = trim($_POST["email"]);
+    $dni = trim($_POST["dni"]);
     $contrasenia = trim($_POST["contrasenia"]);
-    $usuario = obtenerUsuarioPorEmail($conexion, $email);
+    $usuario = obtenerUsuarioPorDni($conexion, $dni);
     if($usuario){
         if(password_verify($contrasenia, $usuario['contrasenia'])){
             $_SESSION['usuario'] = $usuario;
@@ -44,8 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                     <h2 class="text-danger mb-4 text-center fw-bold">Inicio de sesión</h2>
                     <form action="" method="post" id="forms">
                         <div class="mb-3">
-                            <label for="username" class="form-label fw-bold">Nombre de usuario *</label>
-                            <input type="text" class="form-control" id="email" name ="email" placeholder="Ingrese su nombre de usuario" required>
+                            <label for="dni" class="form-label fw-bold">Ingrese su DNI *</label>
+                            <input type="text" class="form-control" id="dni" name ="dni" placeholder="DNI" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label fw-bold">Contraseña *</label>
