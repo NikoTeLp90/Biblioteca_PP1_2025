@@ -221,21 +221,82 @@ function eliminarInsumo($conexion, $id) {
 }
 
 // PRESTAMOS ------------------------
-function agregarPrestamo($conexion, $insumo_id, $destinatario) {
-    $query = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?,?)";
+function agregarPrestamo($conexion, $insumo_id, $destinatario, $fecha_limite, $observacion) {
+    // Intento 1: insertar con columna observacion (si existe)
+    $queryConObs = "INSERT INTO prestamo (insumo_id, destinatario, fecha_limite, observacion) VALUES (?,?,?,?)";
+    $stmt = $conexion->prepare($queryConObs);
 
-    if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("is", $insumo_id, $destinatario); 
-
+    if ($stmt) {
+        $stmt->bind_param("isss", $insumo_id, $destinatario, $fecha_limite, $observacion);
         if ($stmt->execute()) {
             $stmt->close();
             return true;
+        }
+        // Si falla, verificamos si es por columna desconocida y probamos sin observacion
+        $errno = $stmt->errno;
+        $err = $stmt->error;
+        $stmt->close();
+        if ($errno === 1054 || stripos($err, 'Unknown column') !== false) {
+            // Intento 2: insertar sin columna observacion
+            $querySinObs = "INSERT INTO prestamo (insumo_id, destinatario, fecha_limite) VALUES (?,?,?)";
+            if ($stmt2 = $conexion->prepare($querySinObs)) {
+                $stmt2->bind_param("iss", $insumo_id, $destinatario, $fecha_limite);
+                if ($stmt2->execute()) {
+                    $stmt2->close();
+                    return true;
+                } else {
+                    error_log('Error INSERT prestamo (sin observacion): ' . $stmt2->error . ' | SQL: ' . $querySinObs);
+                    $stmt2->close();
+                    return false;
+                }
+            } else {
+                error_log('Error prepare prestamo (sin observacion): ' . $conexion->error . ' | SQL: ' . $querySinObs);
+                return false;
+            }
         } else {
-            $stmt->close();
+            error_log('Error INSERT prestamo: ' . $err . ' | SQL: ' . $queryConObs);
             return false;
         }
     } else {
-        return false;
+        // Si no se puede preparar, probamos directamente sin observacion
+        error_log('Error prepare prestamo: ' . $conexion->error . ' | SQL: ' . $queryConObs);
+        $querySinObs = "INSERT INTO prestamo (insumo_id, destinatario, fecha_limite) VALUES (?,?,?)";
+        if ($stmt2 = $conexion->prepare($querySinObs)) {
+            $stmt2->bind_param("iss", $insumo_id, $destinatario, $fecha_limite);
+            if ($stmt2->execute()) {
+                $stmt2->close();
+                return true;
+            } else {
+                error_log('Error INSERT prestamo (sin observacion): ' . $stmt2->error . ' | SQL: ' . $querySinObs);
+                $stmt2->close();
+                return false;
+            }
+        } else {
+            error_log('Error prepare prestamo (sin observacion): ' . $conexion->error . ' | SQL: ' . $querySinObs);
+            return false;
+        }
     }
+}
+
+
+function obtenerPrestamos($conexion): array {
+    // ... existing code ...
+    $sql = "SELECT 
+                p.id,
+                p.insumo_id,
+                p.destinatario,
+                p.fecha_prestamo,
+                p.fecha_limite,
+                i.nombre AS insumo_nombre
+            FROM prestamo p
+            LEFT JOIN insumo i ON i.id = p.insumo_id;";
+    $result = $conexion->query($sql);
+
+
+    $prestamos = [];
+    while ($row = $result->fetch_assoc()) {
+        $prestamos[] = $row;
+    }
+    return $prestamos;
 }
 ?>

@@ -87,7 +87,7 @@ try {
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../prestamos/prestamos.html" id="linkPrestamos">Préstamos</a>
+              <a class="nav-link" href="php/prestamo/listar_prestamos.php" id="linkPrestamos">Préstamos</a>
             </li>
             
             
@@ -147,8 +147,6 @@ try {
         <button
           class="btn btn-danger"
           id="btnNuevoPrestamo"
-          data-bs-toggle="modal"
-          data-bs-target="#modalPrestamo"
         >
           Nuevo préstamo
         </button>
@@ -291,7 +289,9 @@ function filtrarInsumos() {
         function updateHiddenJson() {
           const seleccionados = Array.from(selectedMap.values());
           const payload = { insumos: seleccionados };
-          jsonHiddenEl.value = JSON.stringify(payload);
+          if (jsonHiddenEl) {
+            jsonHiddenEl.value = JSON.stringify(payload);
+          }
         }
     
         function renderChecklist(insumos) {
@@ -350,21 +350,25 @@ function filtrarInsumos() {
             });
         }
     
-        modalEl.addEventListener('show.bs.modal', loadInsumos);
+        if (modalEl) {
+          modalEl.addEventListener('show.bs.modal', loadInsumos);
+        }
     
-        form.addEventListener('submit', function(e) {
-          e.preventDefault();
-          const destinatario = document.getElementById('inputDestinatario').value;
-          const fechaLimite = document.getElementById('inputFechaLimite').value;
-          const payload = {
-            destinatario,
-            fechaLimite,
-            insumos: Array.from(selectedMap.values())
-          };
-          jsonHiddenEl.value = JSON.stringify(payload);
-          console.log('Préstamo JSON:', jsonHiddenEl.value);
-          alert('Préstamo preparado:\n' + jsonHiddenEl.value);
-        });
+        if (form && jsonHiddenEl) {
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const destinatario = document.getElementById('inputDestinatario').value;
+            const fechaLimite = document.getElementById('inputFechaLimite').value;
+            const payload = {
+              destinatario,
+              fechaLimite,
+              insumos: Array.from(selectedMap.values())
+            };
+            jsonHiddenEl.value = JSON.stringify(payload);
+            console.log('Préstamo JSON:', jsonHiddenEl.value);
+            alert('Préstamo preparado:\n' + jsonHiddenEl.value);
+          });
+        }
       });
     </script>
     <!-- Modal de Confirmación de Préstamo -->
@@ -387,6 +391,14 @@ function filtrarInsumos() {
                 <label for="inputDestinatario" class="form-label">Destinatario</label>
                 <input type="text" class="form-control" id="inputDestinatario" required>
               </div>
+              <div class="mb-3">
+                <label for="inputFechaLimite" class="form-label">Fecha límite</label>
+                <input type="date" class="form-control" id="inputFechaLimite" required>
+              </div>
+              <div class="mb-3">
+                <label for="inputObservacion" class="form-label">Observación</label>
+                <input type="text" class="form-control" id="inputObservacion" required>
+              </div>
               <button type="submit" class="btn btn-danger w-100">
                 Confirmar préstamo
               </button>
@@ -404,6 +416,7 @@ function filtrarInsumos() {
       const btnConfirmarPrestamo = document.getElementById('btnConfirmarPrestamo');
       const contadorSeleccionados = document.getElementById('contadorSeleccionados');
       const botonesSeleccionar = document.querySelectorAll('.btn-seleccionar');
+      const btnCancelarPrestamo = document.getElementById('btnCancelarPrestamo'); 
 
       // Función para alternar la selección de un insumo
       function toggleSeleccion(btn) {
@@ -517,18 +530,21 @@ function filtrarInsumos() {
         e.preventDefault();
         
         const destinatario = document.getElementById('inputDestinatario').value;
+        const fechaLimite = document.getElementById('inputFechaLimite').value;
+        const observacion = document.getElementById('inputObservacion').value;
         
         const prestamo = {
           insumos: Array.from(insumosSeleccionados.values()),
           destinatario: destinatario,
+          fecha_limite: fechaLimite,
+          observacion: observacion,
         };
         
         console.log('Procesando préstamo:', prestamo);
         
         // Redirigir a agregar_prestamo.php con los datos para crear el prestamo
         const insumosIds = prestamo.insumos.map(insumo => insumo.id).join(',');
-        //Le paso por parametro el destinatario y los insumos seleccionados para crear el prestamo
-        const url = `php/prestamo/agregar_prestamo.php?destinatario=${encodeURIComponent(destinatario)}&insumos=${insumosIds}`;
+        const url = `php/prestamo/agregar_prestamo.php?destinatario=${encodeURIComponent(destinatario)}&insumos=${insumosIds}&fecha_limite=${encodeURIComponent(fechaLimite)}&observacion=${encodeURIComponent(observacion)}`;
         window.location.href = url;
 
 

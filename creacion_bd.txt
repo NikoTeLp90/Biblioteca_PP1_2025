@@ -1,0 +1,50 @@
+-- Crear BD
+CREATE DATABASE IF NOT EXISTS `biblioteca`
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE `biblioteca`;
+
+-- Tabla usuario
+CREATE TABLE IF NOT EXISTS `usuario` (
+  `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `nombre` VARCHAR(100) NOT NULL,
+  `apellido` VARCHAR(100) NOT NULL,
+  `dni` VARCHAR(20) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `cargo` ENUM('bibliotecario','secretario','admin') NOT NULL,
+  `contrasenia` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `uniq_usuario_dni` (`dni`),
+  UNIQUE KEY `uniq_usuario_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabla insumo
+CREATE TABLE IF NOT EXISTS `insumo` (
+  `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `nombre` VARCHAR(150) NOT NULL,
+  `categoria` ENUM('tecnologia','bibliografia','electrico','otro') NOT NULL,
+  `disponibilidad` ENUM('disponible','en_prestamo','baja') NOT NULL DEFAULT 'disponible',
+  `estado` ENUM('disponible','en_reparacion','fuera_servicio') NOT NULL DEFAULT 'disponible',
+  `observaciones` VARCHAR(255) DEFAULT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_insumo_estado` (`estado`),
+  INDEX `idx_insumo_disponibilidad` (`disponibilidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabla préstamo
+CREATE TABLE IF NOT EXISTS `prestamo` (
+  `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `insumo_id` INT UNSIGNED NOT NULL,
+  `destinatario` VARCHAR(255) NOT NULL,
+  `fecha_prestamo` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `fecha_limite` DATE DEFAULT NULL,
+  `fecha_devolucion` DATE DEFAULT NULL,
+  `estado` ENUM('activo','devuelto','vencido') NOT NULL DEFAULT 'activo',
+  CONSTRAINT `fk_prestamo_insumo`
+    FOREIGN KEY (`insumo_id`)
+    REFERENCES `insumo` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+  INDEX `idx_prestamo_insumo` (`insumo_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

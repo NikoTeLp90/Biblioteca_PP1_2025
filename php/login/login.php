@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     if($usuario){
         if(password_verify($contrasenia, $usuario['contrasenia'])){
             $_SESSION['usuario'] = $usuario;
-            header("Location: ../../index.html");
+            header("Location: ../../index.php");
         }else{
             $_SESSION['error'] = "Contraseña incorrecta";
             header("Location: ../error.php");
