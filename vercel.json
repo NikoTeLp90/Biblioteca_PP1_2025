@@ -1,9 +1,0 @@
-{
-  "functions": {
-    "api/index.php": { "runtime": "now-php@1.0.0" }
-  },
-  "routes": [
-    { "src": "/", "dest": "/api/index.php" },
-    { "src": "/src/(.*)", "dest": "/src/$1" }
-  ]
-}
