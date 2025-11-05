@@ -45,7 +45,7 @@ if (isset($_GET['json'])) {
       <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
           <img
-            src="../multimedia/logo i12 fondo blanco.png"
+            src="../../src/img/logo i12 fondo blanco.png"
             alt="Logo"
             class="d-inline-block align-text-top me-2"
             style="height: 40px"
@@ -95,7 +95,7 @@ if (isset($_GET['json'])) {
       <div class="text-center mb-4">
         <h2>
             <img
-            src="../multimedia/logo i12 fondo blanco.png"
+            src="../../src/img/logo i12 fondo blanco.png"
             alt="Logo"
             class="d-inline-block align-text-top me-2"
             style="height: 40px" />
