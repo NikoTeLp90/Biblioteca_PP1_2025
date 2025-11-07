@@ -397,7 +397,7 @@ function filtrarInsumos() {
               </div>
               <div class="mb-3">
                 <label for="inputObservacion" class="form-label">Observación</label>
-                <input type="text" class="form-control" id="inputObservacion" required>
+                <input type="text" class="form-control" id="inputObservacion">
               </div>
               <button type="submit" class="btn btn-danger w-100">
                 Confirmar préstamo
