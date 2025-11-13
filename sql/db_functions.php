@@ -221,11 +221,11 @@ function eliminarInsumo($conexion, $id) {
 }
 
 // PRESTAMOS ------------------------
-function agregarPrestamo($conexion, $insumo_id, $destinatario) {
-    $query = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?,?)";
+function agregarPrestamo($conexion, $insumo_id, $destinatario, $observacion) {
+    $query = "INSERT INTO prestamo (insumo_id, destinatario, observacion) VALUES (?,?, ?)";
 
     if ($stmt = $conexion->prepare($query)) {
-        $stmt->bind_param("is", $insumo_id, $destinatario); 
+        $stmt->bind_param("iss", $insumo_id, $destinatario, $observacion); 
 
         if ($stmt->execute()) {
             $stmt->close();
@@ -237,5 +237,20 @@ function agregarPrestamo($conexion, $insumo_id, $destinatario) {
     } else {
         return false;
     }
+}
+
+function obtenerPrestamos($conexion): array {
+    $sql = "SELECT * FROM prestamo";
+    $result = $conexion ->query($sql);
+    $prestamos = [];
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $row['insumo_id'] = getEtiqueta($row['insumo_id']);
+            $row['destinatario'] = getEtiqueta($row['destinatario']);
+            $row['observacion'] = getEtiqueta($row['observacion']);
+            $prestamos[] = $row;
+        }
+    }
+    return $prestamos;
 }
 ?>
