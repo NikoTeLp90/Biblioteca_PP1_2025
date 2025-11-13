@@ -2,13 +2,13 @@
 
 require '../../sql/db_functions.php';
 
-session_start();
+// session_start();
 
-// IMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
-if (!isset($_SESSION['usuario'])) {
-    header("Location: ../login/login.php");
-    exit();
-}
+// // IMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
+// if (!isset($_SESSION['usuario'])) {
+//     header("Location: ../login/login.php");
+//     exit();
+// }
 
 // Verificar que se recibieron los parámetros necesarios
 if (!isset($_GET['destinatario']) || !isset($_GET['insumos'])) {

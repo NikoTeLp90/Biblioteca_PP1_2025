@@ -89,7 +89,7 @@ try {
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="php/prestamo/listar_prestamos.php" id="linkPrestamos">Préstamos</a>
+              <a class="nav-link" href=".php/prestamo/listar_prestamos.php" id="linkPrestamos">Préstamos</a>
             </li>
             
             
@@ -399,7 +399,7 @@ function filtrarInsumos() {
               </div>
               <div class="mb-3">
                 <label for="inputObservacion" class="form-label">Observación</label>
-                <input type="text" class="form-control" id="inputObservacion" required>
+                <input type="text" class="form-control" id="inputObservacion">
               </div>
               <button type="submit" class="btn btn-danger w-100">
                 Confirmar préstamo
