@@ -68,9 +68,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link" href="../../index.php" id="linkInicio">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="../insumos/listar_insumos.php" id="linkInsumos">Insumos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../prestamos/prestamos.html" id="linkPrestamos">Préstamos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../../usuarios/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
+                    <li class="nav-item"><a class="nav-link active" href="../../php/insumos/listar_insumos.php" id="linkInsumos">Insumos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../php/prestamo/listar_prestamos.php" id="linkPrestamos">Préstamos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../php/usuarios/listar_alumnos.php" id="linkUsuarios">Usuarios</a>
                     <li class="nav-item"><a class="nav-link" href="../../login/logout.php" id="linkSalir">Salir</a></li>
                     
                    
