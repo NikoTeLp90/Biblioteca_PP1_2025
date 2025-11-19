@@ -65,9 +65,9 @@ $alumnos = obtenerUsuarios($conexion);
         <table class="table table-striped table-hover table-bordered" id="usuariosTable">
         <thead class="table-dark">
             <tr>
-            <th scope="col">ID</th>
             <th scope="col">Nombre</th>
             <th scope="col">Apellido</th>
+            <th scope="col">DNI</th>
             <th scope="col">Mail</th>
             <th scope="col">Cargo</th>
             <th scope="col">Acción</th>
@@ -79,16 +79,16 @@ $alumnos = obtenerUsuarios($conexion);
         if (count($alumnos) > 0) {
             foreach ($alumnos as $alumno):
                 echo '<tr>';
-                echo '<td>' . $alumno['id'] . '</td>';
                 echo '<td>' . $alumno['nombre'] . '</td>';
                 echo '<td>' . $alumno['apellido'] . '</td>';
+                echo '<td>' . ($alumno['dni'] ?? 'N/A') . '</td>';
                 echo '<td>' . $alumno['email'] . '</td>';
                 echo '<td>' . $alumno['cargo'] . '</td>';
                 echo '<td>
-                        <a href="../usuarios/editar_alumno.php?id=' . $alumno['id'] . '">Editar</a>
+                        <a href="../usuarios/editar_alumno.php?id=' . $alumno['id'] . '" class="btn btn-sm btn-outline-primary me-1">Editar</a>
                         <form action="../usuarios/eliminar_alumno.php" method="POST" style="display:inline;">
                             <input type="hidden" name="alumno_id" value="' . $alumno['id'] . '">
-                            <button type="submit" onclick="return confirm(\'¿Esta seguro que desea eliminar? a el ' .$alumno['cargo'].' ' .$alumno['nombre'] . '\')">Eliminar</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'¿Está seguro que desea eliminar a ' . $alumno['nombre'] . ' ' . $alumno['apellido'] . '?\')">Eliminar</button>
                         </form>
                     </td>';
                 echo '</tr>';
