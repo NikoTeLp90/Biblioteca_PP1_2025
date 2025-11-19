@@ -28,3 +28,31 @@ create table prestamo (
     activo boolean default true,
     foreign key (insumo_id) references insumo(id)
     );
+
+DELIMITER //
+
+CREATE TRIGGER before_agregar_prestamo
+BEFORE INSERT ON prestamo
+FOR EACH ROW
+BEGIN
+  UPDATE insumo SET disponibilidad = 'en_prestamo'
+  WHERE id=NEW.insumo_id;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER after_devolver_prestamo
+AFTER UPDATE ON prestamo
+FOR EACH ROW
+BEGIN
+  IF OLD.activo = 1 AND NEW.activo = 0 THEN
+    UPDATE insumo 
+    SET disponibilidad = 'disponible'
+    WHERE id = NEW.insumo_id;
+  END IF;
+END //
+
+DELIMITER ;
+

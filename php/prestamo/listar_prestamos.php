@@ -1,4 +1,7 @@
 <?php
+// Configurar zona horaria (Argentina)
+date_default_timezone_set('America/Argentina/Buenos_Aires');
+
 require '../../config/connect.php';
 require '../../sql/db_functions.php';
 
@@ -90,8 +93,10 @@ $prestamos = obtenerPrestamos($conexion, $filtro);
                             $estadoTexto = '';
                             
                             if ($prestamo['activo']) {
-                                $fechaLimite = new DateTime($prestamo['fecha_final']);
-                                $ahora = new DateTime();
+                                // Tuve que hacer esto porque sin zona horaria, no funcionaba el comparador de fechas.
+                                $timezone = new DateTimeZone('America/Argentina/Buenos_Aires');
+                                $fechaLimite = new DateTime($prestamo['fecha_final'], $timezone);
+                                $ahora = new DateTime('now', $timezone);
                                 
                                 if ($fechaLimite < $ahora) {
                                     $estadoClass = 'text-danger fw-bold';
