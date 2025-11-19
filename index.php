@@ -1,12 +1,13 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
-require_once __DIR__ . '/../php/login/login.php';
+// No se debe incluir el archivo de la página de login aquí (evita inyectar el HTML del login)
+// require_once __DIR__ . '/../php/login/login.php';
 
 session_start();
 
 // INMPORTANTE PARA QUE NO SE PUEDA ACCEDER A LA PAGINA SI NO ESTA LOGUEADO
 if (!isset($_SESSION['usuario'])) {
-    header("Location: ./php/login/login.php");
+    header("Location: php/login/login.php");
     exit();
 }
 
