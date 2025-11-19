@@ -194,36 +194,27 @@ try {
         <table class="table table-hover">
           <thead class="table-light">
             <tr>
+              <th scope="col">Seleccionar</th>
               <th scope="col">Codigo</th>
               <th scope="col">Nombre</th>
-              <th scope="col">Categoria</th>
-              <th scope="col">Disponibilidad</th>
               <th scope="col">Estado</th>
-              <th scope="col">Observacion</th>
-              <th scope="col">Acción</th>
             </tr>
           </thead>
           <tbody>
           <?php foreach ($insumos as $insumo): ?>
 
-            <!-- data-categoria, data-disponibilidad, data-estado, data-nombre son para filtrar los insumos -->
-            <tr data-categoria="<?php echo htmlspecialchars($insumo['categoria']); ?>"
-               data-disponibilidad="<?php echo htmlspecialchars($insumo['disponibilidad']); ?>"
-               data-estado="<?php echo htmlspecialchars($insumo['estado']); ?>"
+            <!-- data-estado, data-nombre son para filtrar los insumos -->
+            <tr data-estado="<?php echo htmlspecialchars($insumo['estado']); ?>"
                data-nombre="<?php echo htmlspecialchars(strtolower($insumo['nombre'])); ?>">
-              <td><?php echo htmlspecialchars($insumo['id']); ?></td>
-              <td><?php echo htmlspecialchars($insumo['nombre']); ?></td>
-              <td><?php echo htmlspecialchars($insumo['categoria']); ?></td>
-              <td data-disponibilidad="<?php echo htmlspecialchars($insumo['disponibilidad']); ?>"><?php echo htmlspecialchars($insumo['disponibilidad']); ?></td>
-              <td data-estado="<?php echo htmlspecialchars($insumo['estado']); ?>"><?php echo htmlspecialchars($insumo['estado']); ?></td>
-              <td><?php echo htmlspecialchars($insumo['observaciones']); ?></td>
               <td>
-                <div class="btn-group" role="group">
-                <button type="button" class="btn btn-sm btn-outline-primary btn-seleccionar d-none" onclick="toggleSeleccion(this)" data-insumo='<?php echo json_encode($insumo); ?>' data-selected="false" 
-                <?php if (strtolower($insumo['disponibilidad']) !== 'disponible' || strtolower($insumo['estado']) !== 'disponible'): ?>disabled<?php endif; ?>>
-                    Seleccionar</button>  
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input checkbox-seleccionar d-inline-block" onclick="toggleSeleccion(this)" data-insumo='<?php echo json_encode($insumo); ?>' 
+                  <?php if (strtolower($insumo['disponibilidad']) !== 'disponible' || strtolower($insumo['estado']) !== 'disponible'): ?>disabled<?php endif; ?> />
                 </div>
               </td>
+              <td><?php echo htmlspecialchars($insumo['id']); ?></td>
+              <td><?php echo htmlspecialchars($insumo['nombre']); ?></td>
+              <td data-estado="<?php echo htmlspecialchars($insumo['estado']); ?>"><?php echo htmlspecialchars($insumo['estado']); ?></td>
             </tr>
           <?php endforeach; ?>
           </tbody>
@@ -238,27 +229,19 @@ try {
 
     <script>
   function filtrarInsumos() {
-  // Mantener sólo búsqueda y estado. 'No disponible' significa cualquier estado distinto a 'Disponible'.
-  const categoria = '';
-  const disponibilidad = '';
+  // Filtrado usando búsqueda (nombre) y selectEstado. Tabla ahora tiene columnas: Seleccionar, Codigo, Nombre, Estado
   const estado = document.getElementById('selectEstado')?.value || '';
   const busqueda = document.getElementById('inputBuscar')?.value.toLowerCase() || '';
 
     const filas = document.querySelectorAll('tbody tr');
 
-    filas.forEach((fila, index) => {
-        const filaCategoria = fila.cells[2].textContent.trim();
-        const filaDisponibilidad = fila.cells[3].textContent.trim();
-        const filaEstado = fila.cells[4].textContent.trim();
-        const filaNombre = fila.cells[1].textContent.toLowerCase();
-        
+    filas.forEach((fila) => {
+        const filaNombre = fila.cells[2].textContent.toLowerCase().trim();
+        const filaEstado = fila.cells[3].textContent.trim();
+
         const mostrarEstado = (estado === '' || (estado === 'No disponible' ? filaEstado !== 'Disponible' : filaEstado === estado));
-        const mostrar = (categoria === '' || filaCategoria === categoria) &&
-                 (disponibilidad === '' || filaDisponibilidad === disponibilidad) &&
-                 mostrarEstado &&
-                 (busqueda === '' || filaNombre.includes(busqueda));
-        
-        
+        const mostrar = mostrarEstado && (busqueda === '' || filaNombre.includes(busqueda));
+
         fila.style.display = mostrar ? '' : 'none';
     });
 }
@@ -401,34 +384,23 @@ try {
       const btnNuevoPrestamo = document.getElementById('btnNuevoPrestamo');
       const btnConfirmarPrestamo = document.getElementById('btnConfirmarPrestamo');
       const contadorSeleccionados = document.getElementById('contadorSeleccionados');
-      const botonesSeleccionar = document.querySelectorAll('.btn-seleccionar');
+      const botonesSeleccionar = document.querySelectorAll('.checkbox-seleccionar');
       const btnCancelarPrestamo = document.getElementById('btnCancelarPrestamo'); 
 
-      // Función para alternar la selección de un insumo
-      function toggleSeleccion(btn) {
-        const insumoData = JSON.parse(btn.dataset.insumo);
+      // Función para alternar la selección de un insumo (checkbox)
+      function toggleSeleccion(el) {
+        const insumoData = JSON.parse(el.dataset.insumo);
         const insumoId = insumoData.id;
-        const isSelected = btn.dataset.selected === 'true';
-        
-        if (isSelected) {
-          // Deseleccionar
-          insumosSeleccionados.delete(insumoId);
-          btn.classList.remove('btn-primary');
-          btn.classList.add('btn-outline-primary');
-          btn.dataset.selected = 'false';
-          btn.textContent = 'Seleccionar';
-        } else {
-          // Seleccionar
+
+        if (el.checked) {
           insumosSeleccionados.set(insumoId, insumoData);
-          btn.classList.remove('btn-outline-primary');
-          btn.classList.add('btn-primary');
-          btn.dataset.selected = 'true';
-          btn.textContent = 'Seleccionado';
+        } else {
+          insumosSeleccionados.delete(insumoId);
         }
-        
+
         // Actualizar contador
         contadorSeleccionados.textContent = insumosSeleccionados.size;
-        
+
         // Actualizar JSON
         actualizarJSON();
       }
@@ -444,12 +416,9 @@ try {
 
       btnNuevoPrestamo.addEventListener('click', function() {
 
-        botonesSeleccionar.forEach(btn => {
-          btn.classList.remove('d-none');
-          btn.classList.remove('btn-primary');
-          btn.classList.add('btn-outline-primary');
-          btn.dataset.selected = 'false';
-          btn.textContent = 'Seleccionar';
+        botonesSeleccionar.forEach(chk => {
+          chk.classList.remove('d-none');
+          chk.checked = false;
         });
         
  
@@ -493,11 +462,9 @@ try {
 
       btnCancelarPrestamo.addEventListener('click', function() {
 
-        botonesSeleccionar.forEach(btn => {
-          btn.classList.add('d-none');
-          btn.classList.remove('btn-primary');
-          btn.classList.add('btn-outline-primary');
-          btn.textContent = 'Seleccionar';
+        botonesSeleccionar.forEach(chk => {
+          chk.classList.add('d-none');
+          chk.checked = false;
         });
         
 
