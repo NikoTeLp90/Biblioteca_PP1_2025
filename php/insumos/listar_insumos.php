@@ -78,13 +78,11 @@ if (isset($_GET['json'])) {
             <thead class="table-dark">
                 <tr>
                     <th>Codigo</th>
-                    <th>Nombre</th>   
-                    <th>categoria</th>
-                    <th>Disponibilidad</th>
+                    <th>Nombre</th>
+                    <th>Categoria</th>
                     <th>Estado</th>
                     <th>Observacion</th>
                     <th>Accion</th>
-                    
                 </tr>
 
             </thead>
@@ -96,7 +94,6 @@ if (isset($_GET['json'])) {
                 echo '<td>' . $insumo['id'] . '</td>';
                 echo '<td>' . $insumo['nombre'] . '</td>';
                 echo '<td>' . $insumo['categoria'] . '</td>';
-                echo '<td>' . $insumo['disponibilidad'] . '</td>';
                 echo '<td>' . $insumo['estado'] . '</td>';
                 echo '<td>' . $insumo['observaciones'] . '</td>';
                 echo '<td>
