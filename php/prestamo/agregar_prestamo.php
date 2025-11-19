@@ -20,10 +20,10 @@ $destinatario = trim($_GET['destinatario']);
 $insumosIds = explode(',', $_GET['insumos']);
 
 // Nuevos parámetros opcionales
-$fecha_limite = isset($_GET['fecha_limite']) ? trim($_GET['fecha_limite']) : null;
-$observacion = isset($_GET['observacion']) ? trim($_GET['observacion']) : null;
-$fecha_limite = trim($_GET['fecha_limite']);
-$observacion = trim($_GET['observacion']);
+// $fecha_limite = isset($_GET['fecha_limite']) ? trim($_GET['fecha_limite']) : null;
+// $observacion = isset($_GET['observacion']) ? trim($_GET['observacion']) : null;
+// $fecha_limite = trim($_GET['fecha_limite']);
+// $observacion = trim($_GET['observacion']);
 
 $exitosos = 0;
 $errores = 0;
@@ -31,7 +31,8 @@ $errores = 0;
 // Procesar cada insumo
 foreach ($insumosIds as $insumoId) {
     if (!empty($insumoId)) {
-        if (agregarPrestamo($conexion, $insumoId, $destinatario, $fecha_limite, $observacion)) {
+        // if (agregarPrestamo($conexion, $insumoId, $destinatario, $fecha_limite, $observacion)) {
+        if (agregarPrestamo($conexion, $insumoId, $destinatario)) {
             $exitosos++;
         } else {
             $errores++;

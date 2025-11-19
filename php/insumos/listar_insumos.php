@@ -99,13 +99,17 @@ if (isset($_GET['json'])) {
                 echo '<td>' . $insumo['disponibilidad'] . '</td>';
                 echo '<td>' . $insumo['estado'] . '</td>';
                 echo '<td>' . $insumo['observaciones'] . '</td>';
-                echo '<td>
-                        <a href="../insumos/editar_insumo.php?id=' . $insumo['id'] . '">Editar</a>
-                        <form action="../insumos/eliminar_insumo.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="id" value="' . $insumo['id'] . '">
-                        <button type="submit" onclick="return confirm(\'¿Estás seguro de eliminar este insumo?\')">Eliminar</button>
-                        </form>
-                    </td>';
+                if ($insumo['disponibilidad'] != 'Disponible') {
+                    echo '<td>' . "Sin acciones disponibles." . '</td>';
+                } else {
+                    echo '<td>
+                            <a href="../insumos/editar_insumo.php?id=' . $insumo['id'] . '">Editar</a>
+                            <form action="../insumos/eliminar_insumo.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="' . $insumo['id'] . '">
+                            <button type="submit" onclick="return confirm(\'¿Estás seguro de eliminar este insumo?\')">Eliminar</button>
+                            </form>
+                        </td>';
+                }
                 echo '</tr>';
             endforeach;
         } else {
