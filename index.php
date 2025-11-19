@@ -170,7 +170,7 @@ try {
       </div>
 
       <div class="row mb-3">
-        <div class="col-md-4">
+        <div class="col-md-6 col-lg-4">
           <input
             type="text"
             class="form-control"
@@ -181,29 +181,10 @@ try {
           />
         </div>
         <div class="col-md-2">
-          <select class="form-select" id="selectCategoria" name="categoria" onchange="filtrarInsumos()">
-            <option selected value="">Categoría</option>
-            <option value="Tecnología">Tecnología</option>
-            <option value="Bibliografía">Bibliografía</option>
-            <option value="Eléctrico">Eléctrico</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <select class="form-select" id="selectDisponibilidad" name="disponibilidad" onchange="filtrarInsumos()">
-            <option selected value="">Disponibilidad</option>
-            <option value="Disponible">Disponible</option>
-            <option value="En Reparación">En Reparación</option>
-            <option value="Fuera de Servicio">Fuera de Servicio</option>
-          </select>
-        </div>
-
-        <div class="col-md-2">
           <select class="form-select" id="selectEstado" name="estado" onchange="filtrarInsumos()">
             <option selected value="">Estado</option>
             <option value="Disponible">Disponible</option>
-            <option value="En Préstamo">En Préstamo</option>
-            <option value="Dado de Baja">Dado de Baja</option>
+            <option value="No disponible">No disponible</option>
           </select>
         </div>
       </div>
@@ -256,11 +237,12 @@ try {
 
 
     <script>
-function filtrarInsumos() {
-    const categoria = document.getElementById('selectCategoria')?.value || '';
-    const disponibilidad = document.getElementById('selectDisponibilidad')?.value || '';
-    const estado = document.getElementById('selectEstado')?.value || '';
-    const busqueda = document.getElementById('inputBuscar')?.value.toLowerCase() || '';
+  function filtrarInsumos() {
+  // Mantener sólo búsqueda y estado. 'No disponible' significa cualquier estado distinto a 'Disponible'.
+  const categoria = '';
+  const disponibilidad = '';
+  const estado = document.getElementById('selectEstado')?.value || '';
+  const busqueda = document.getElementById('inputBuscar')?.value.toLowerCase() || '';
 
     const filas = document.querySelectorAll('tbody tr');
 
@@ -270,10 +252,11 @@ function filtrarInsumos() {
         const filaEstado = fila.cells[4].textContent.trim();
         const filaNombre = fila.cells[1].textContent.toLowerCase();
         
+        const mostrarEstado = (estado === '' || (estado === 'No disponible' ? filaEstado !== 'Disponible' : filaEstado === estado));
         const mostrar = (categoria === '' || filaCategoria === categoria) &&
-                       (disponibilidad === '' || filaDisponibilidad === disponibilidad) &&
-                       (estado === '' || filaEstado === estado) &&
-                       (busqueda === '' || filaNombre.includes(busqueda));
+                 (disponibilidad === '' || filaDisponibilidad === disponibilidad) &&
+                 mostrarEstado &&
+                 (busqueda === '' || filaNombre.includes(busqueda));
         
         
         fila.style.display = mostrar ? '' : 'none';
