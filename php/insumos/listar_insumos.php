@@ -64,10 +64,14 @@ if (isset($_GET['json'])) {
             <h2> INSUMOS - BIBLIOTECA I.S.F.T. N°12</h2>
         </div>
 
-
-        <div class="d-flex justify-content-end mb-3">
-            <a href="agregar_insumo.php" class="btn btn-danger"> Alta de Insumo</a>
-         </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="col-md-6">
+                <input type="text" id="buscarInsumo" class="form-control" placeholder="Buscar insumo por nombre" oninput="filtrarInsumosPorNombre()">
+            </div>
+            <div>
+                <a href="agregar_insumo.php" class="btn btn-danger"> Alta de Insumo</a>
+            </div>
+        </div>
 
 
 
@@ -111,6 +115,23 @@ if (isset($_GET['json'])) {
 
         ?>
     </table>
+
+    <script>
+        function filtrarInsumosPorNombre() {
+            const busqueda = document.getElementById('buscarInsumo').value.toLowerCase();
+            const filas = document.querySelectorAll('tbody tr');
+            
+            filas.forEach(fila => {
+                const nombre = fila.cells[1].textContent.toLowerCase(); // Columna Nombre (index 1)
+                if (nombre.includes(busqueda)) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
     </body>
 </html>
 
