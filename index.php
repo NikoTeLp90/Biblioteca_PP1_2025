@@ -178,29 +178,11 @@ try {
           />
         </div>
         <div class="col-md-2">
-          <select class="form-select" id="selectCategoria" name="categoria" onchange="filtrarInsumos()">
-            <option selected value="">Categoría</option>
-            <option value="Tecnología">Tecnología</option>
-            <option value="Bibliografía">Bibliografía</option>
-            <option value="Eléctrico">Eléctrico</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-        <div class="col-md-2">
           <select class="form-select" id="selectDisponibilidad" name="disponibilidad" onchange="filtrarInsumos()">
             <option selected value="">Disponibilidad</option>
             <option value="Disponible">Disponible</option>
             <option value="En Reparación">En Reparación</option>
             <option value="Fuera de Servicio">Fuera de Servicio</option>
-          </select>
-        </div>
-
-        <div class="col-md-2">
-          <select class="form-select" id="selectEstado" name="estado" onchange="filtrarInsumos()">
-            <option selected value="">Estado</option>
-            <option value="Disponible">Disponible</option>
-            <option value="En Préstamo">En Préstamo</option>
-            <option value="Dado de Baja">Dado de Baja</option>
           </select>
         </div>
       </div>
@@ -212,9 +194,7 @@ try {
             <tr>
               <th scope="col">Codigo</th>
               <th scope="col">Nombre</th>
-              <th scope="col">Categoria</th>
               <th scope="col">Disponibilidad</th>
-              <th scope="col">Estado</th>
               <th scope="col">Observacion</th>
               <th scope="col">Acción</th>
             </tr>
@@ -222,21 +202,17 @@ try {
           <tbody>
           <?php foreach ($insumos as $insumo): ?>
 
-            <!-- data-categoria, data-disponibilidad, data-estado, data-nombre son para filtrar los insumos -->
-            <tr data-categoria="<?php echo htmlspecialchars($insumo['categoria']); ?>"
-               data-disponibilidad="<?php echo htmlspecialchars($insumo['disponibilidad']); ?>"
-               data-estado="<?php echo htmlspecialchars($insumo['estado']); ?>"
+            <!-- data-disponibilidad, data-nombre son para filtrar los insumos -->
+            <tr data-disponibilidad="<?php echo htmlspecialchars($insumo['disponibilidad']); ?>"
                data-nombre="<?php echo htmlspecialchars(strtolower($insumo['nombre'])); ?>">
               <td><?php echo htmlspecialchars($insumo['id']); ?></td>
               <td><?php echo htmlspecialchars($insumo['nombre']); ?></td>
-              <td><?php echo htmlspecialchars($insumo['categoria']); ?></td>
               <td data-disponibilidad="<?php echo htmlspecialchars($insumo['disponibilidad']); ?>"><?php echo htmlspecialchars($insumo['disponibilidad']); ?></td>
-              <td data-estado="<?php echo htmlspecialchars($insumo['estado']); ?>"><?php echo htmlspecialchars($insumo['estado']); ?></td>
               <td><?php echo htmlspecialchars($insumo['observaciones']); ?></td>
               <td>
                 <div class="btn-group" role="group">
                 <button type="button" class="btn btn-sm btn-outline-primary btn-seleccionar d-none" onclick="toggleSeleccion(this)" data-insumo='<?php echo json_encode($insumo); ?>' data-selected="false" 
-                <?php if (strtolower($insumo['disponibilidad']) !== 'disponible' || strtolower($insumo['estado']) !== 'disponible'): ?>disabled<?php endif; ?>>
+                <?php if (strtolower($insumo['disponibilidad']) !== 'disponible'): ?>disabled<?php endif; ?>>
                     Seleccionar</button>  
                 </div>
               </td>
@@ -254,22 +230,16 @@ try {
 
     <script>
 function filtrarInsumos() {
-    const categoria = document.getElementById('selectCategoria')?.value || '';
     const disponibilidad = document.getElementById('selectDisponibilidad')?.value || '';
-    const estado = document.getElementById('selectEstado')?.value || '';
     const busqueda = document.getElementById('inputBuscar')?.value.toLowerCase() || '';
 
     const filas = document.querySelectorAll('tbody tr');
 
     filas.forEach((fila, index) => {
-        const filaCategoria = fila.cells[2].textContent.trim();
-        const filaDisponibilidad = fila.cells[3].textContent.trim();
-        const filaEstado = fila.cells[4].textContent.trim();
+        const filaDisponibilidad = fila.cells[2].textContent.trim();
         const filaNombre = fila.cells[1].textContent.toLowerCase();
         
-        const mostrar = (categoria === '' || filaCategoria === categoria) &&
-                       (disponibilidad === '' || filaDisponibilidad === disponibilidad) &&
-                       (estado === '' || filaEstado === estado) &&
+        const mostrar = (disponibilidad === '' || filaDisponibilidad === disponibilidad) &&
                        (busqueda === '' || filaNombre.includes(busqueda));
         
         

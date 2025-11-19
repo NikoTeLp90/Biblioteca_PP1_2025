@@ -13,16 +13,13 @@ if (!isset($_SESSION['usuario'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
     $cantidad = trim($_POST["cantidad"]);
-    $categoria = trim($_POST["categoria"]);
-    $disponibilidad = trim($_POST["disponibilidad"]);
-    $estado = trim($_POST["estado"]);
     $observaciones = trim($_POST["observaciones"]);
 
     $exitosos = 0;
     $errores = 0;
 
     for ($i = 0; $i < $cantidad; $i++) {
-        if (agregarInsumo($conexion, $nombre, $categoria, $disponibilidad, $estado, $observaciones)) {
+        if (agregarInsumo($conexion, $nombre, '', '', '', $observaciones)) {
             $exitosos++;
         } else {
             $errores++;
@@ -93,40 +90,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="text" id="nombre" class="form-control" name="nombre" required>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Categoría</label>
-                        <select class="form-select" id="categoria" name="categoria" required>
-                            <option value="">Seleccionar</option>
-                            <option value="tecnologia">Tecnología</option>
-                            <option value="bibliografia">Bibliografía</option>
-                            <option value="electrico">Eléctrico</option>
-                            <option value="otro">Otro</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
                         <label class="form-label fw-bold">Cantidad</label>
                         <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" value="1" required>
                     </div>
                     <!-- Contenedor donde se agregarán filas dinámicas para cada unidad -->
                     <div class="col-12">
                         <div id="unidadesContainer" class="mt-3"></div>
-                    </div>
-                      <div class="col-md-6">
-                        <label class="form-label fw-bold">Disponibilidad</label>
-                        <select class="form-select" id="estado" name="disponibilidad" required>
-                            <option value="">Seleccionar</option>
-                            <option value="disponible">Disponible</option>
-                            <option value="en_reparacion">En Reparación</option>
-                            <option value="fuera_servicio">Fuera de Servicio</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Estado</label>
-                        <select class="form-select" id="estado" name="estado" required>
-                            <option value="">Seleccionar</option>
-                            <option value="disponible">Disponible</option>
-                            <option value="en_prestamo">En Prestamo</option>
-                            <option value="baja">Baja</option>
-                        </select>
                     </div>
                     <div class="col-12">
                         <label class="form-label fw-bold">Observación</label>
