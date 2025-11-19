@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="mt-4 d-flex justify-content-center">
                     <button type="submit" class="btn btn-danger me-2">Guardar Insumo</button>
-                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                    <a href="listar_insumos.php" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>
