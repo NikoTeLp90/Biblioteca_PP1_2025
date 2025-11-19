@@ -62,8 +62,8 @@ $alumnos = obtenerUsuarios($conexion);
     </div>
 
     <div class="container">
-        <table class="table table-striped table-hover table-bordered" id="usuariosTable">
-        <thead class="table-dark">
+          <table class="table table-hover">
+        <thead class="table-light">
             <tr>
             <th scope="col">ID</th>
             <th scope="col">Nombre</th>

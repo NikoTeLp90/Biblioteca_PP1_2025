@@ -25,6 +25,6 @@ create table prestamo (
     fecha_inicio timestamp default current_timestamp,
     fecha_final datetime as (timestamp(date(fecha_inicio), '22:00:00')) stored,
     destinatario varchar(75) not null,
-    activo boolean default false,
+    activo boolean default true,
     foreign key (insumo_id) references insumo(id)
     );
