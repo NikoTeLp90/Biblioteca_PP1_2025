@@ -32,15 +32,20 @@ function crearUsuario($conexion, $nombre, $apellido, $dni, $email, $cargo, $cont
 
     if ($stmt = $conexion->prepare($query)) {
         $stmt->bind_param("ssssss", $nombre, $apellido, $dni, $email, $cargo, $contrasenia);
-
-    
-        if($stmt->execute()){
-            $msg = "Usuario creado correctamente";
-            // Mostrar mensaje al usuario y redirigir a la lista
-            echo "<script>alert(" . json_encode($msg) . "); window.location.href = 'listar_alumnos.php';</script>";
-            exit();
-        } else {
-            $err = "Error al crear usuario: " . $stmt->error;
+        try {
+            if ($stmt->execute()) {
+                $msg = "Usuario creado correctamente";
+                // Mostrar mensaje al usuario y redirigir a la lista
+                echo "<script>alert(" . json_encode($msg) . "); window.location.href = 'listar_alumnos.php';</script>";
+                exit();
+            }
+        } catch (mysqli_sql_exception $e) {
+            // Manejar clave duplicada (dni o email único)
+            if ($e->getCode() === 1062) {
+                $err = "Ya existe un usuario con ese DNI o email.";
+            } else {
+                $err = "Error al crear usuario: " . $e->getMessage();
+            }
             // Mostrar mensaje de error y volver al formulario de alta
             echo "<script>alert(" . json_encode($err) . "); window.location.href = 'agregar_alumno.php';</script>";
             exit();
