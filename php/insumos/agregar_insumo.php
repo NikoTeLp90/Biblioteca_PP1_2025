@@ -15,7 +15,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cantidad = trim($_POST["cantidad"]);
     $observaciones = trim($_POST["observaciones"]);
     
-    // Valores por defecto para campos no mostrados
     $categoria = 'general';
     $disponibilidad = 'disponible';
     $estado = 'disponible';

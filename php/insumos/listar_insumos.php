@@ -122,7 +122,7 @@ if (isset($_GET['json'])) {
             const filas = document.querySelectorAll('tbody tr');
             
             filas.forEach(fila => {
-                const nombre = fila.cells[1].textContent.toLowerCase(); // Columna Nombre (index 1)
+                const nombre = fila.cells[1].textContent.toLowerCase();
                 if (nombre.includes(busqueda)) {
                     fila.style.display = '';
                 } else {

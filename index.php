@@ -27,7 +27,6 @@ try {
         throw new Exception("Error al obtener insumos");
     }
     
-    // Mensajes de creacion de prestamos o errores
     $mensaje = isset($_GET['mensaje']) ? $_GET['mensaje'] : '';
     $tipo_mensaje = isset($_GET['tipo']) ? $_GET['tipo'] : '';
     
@@ -229,7 +228,6 @@ try {
 
     <script>
   function filtrarInsumos() {
-  // Filtrado usando búsqueda (nombre) y selectEstado. Tabla ahora tiene columnas: Seleccionar, Codigo, Nombre, Estado
   const estado = document.getElementById('selectEstado')?.value || '';
   const busqueda = document.getElementById('inputBuscar')?.value.toLowerCase() || '';
 
@@ -379,7 +377,6 @@ try {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Variables globales
       let insumosSeleccionados = new Map();
       const btnNuevoPrestamo = document.getElementById('btnNuevoPrestamo');
       const btnConfirmarPrestamo = document.getElementById('btnConfirmarPrestamo');
@@ -387,7 +384,6 @@ try {
       const botonesSeleccionar = document.querySelectorAll('.checkbox-seleccionar');
       const btnCancelarPrestamo = document.getElementById('btnCancelarPrestamo'); 
 
-      // Función para alternar la selección de un insumo (checkbox)
       function toggleSeleccion(el) {
         const insumoData = JSON.parse(el.dataset.insumo);
         const insumoId = insumoData.id;
@@ -398,14 +394,9 @@ try {
           insumosSeleccionados.delete(insumoId);
         }
 
-        // Actualizar contador
         contadorSeleccionados.textContent = insumosSeleccionados.size;
-
-        // Actualizar JSON
-        actualizarJSON();
       }
 
-      // Función para actualizar el JSON de insumos seleccionados
       function actualizarJSON() {
         const insumosArray = Array.from(insumosSeleccionados.values());
         const jsonInsumos = JSON.stringify(insumosArray);
@@ -495,7 +486,6 @@ try {
         
         console.log('Procesando préstamo:', prestamo);
         
-        // Redirigir a agregar_prestamo.php con los datos para crear el prestamo
         const insumosIds = prestamo.insumos.map(insumo => insumo.id).join(',');
         const url = `php/prestamo/agregar_prestamo.php?destinatario=${encodeURIComponent(destinatario)}&insumos=${insumosIds}&fecha_limite=${encodeURIComponent(fechaLimite)}&observacion=${encodeURIComponent(observacion)}`;
         window.location.href = url;
