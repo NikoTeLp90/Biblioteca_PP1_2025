@@ -1,0 +1,40 @@
+/* Estilos personalizados para sobrescribir los de Bootstrap */
+.bg-dark {
+    background-color: #ffffff !important;
+}
+
+.btn-dark {
+    background-color: #555 !important;
+    border-color: #555 !important;
+}
+
+.btn-dark:hover {
+    background-color: #333 !important;
+    border-color: #333 !important;
+}
+
+.text-danger {
+    color: #cc0000 !important;
+}
+
+/* Clases para el tamaño y los estilos del contenedor principal */
+.login-box {
+    max-width: 1000px;
+}
+
+/* Clase para el tamaño de la imagen del logo */
+.logo-img {
+    max-width: 120px;
+}
+
+/* Clase para el tamaño del contenedor del formulario */
+.login-form-wrapper {
+    max-width: 400px;
+}
+
+/* Estilos específicos para la página de insumos */
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
