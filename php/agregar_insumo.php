@@ -1,16 +1,17 @@
 <?php
 
+require '../config/connect.php';
 require '../sql/db_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $codigo = trim($_POST["codigo"]);
     $nombre = trim($_POST["nombre"]);
     $categoria = trim($_POST["categoria"]);
-    $estado_conservacion = trim($_POST["estado_conservacion"]);
-    $disponibilidad= trim($_POST["disponibilidad"]);
-    $observacion= trim($_POST["observacion"]);
+    $disponibilidad = trim($_POST["disponibilidad"]);
+    $estado = trim($_POST["estado"]);
+    $observaciones = trim($_POST["observaciones"]);
 
-    agregarInsumo($conexion, $nombre, $categoria, $carrera, $estado_conservacion, $disponibilidad, $observacion);
+    // agregarInsumo($conexion, $codigo, $nombre, $categoria, $disponibilidad, $estado, $observaciones);
+    agregarInsumo($conexion, $nombre, $categoria, $disponibilidad, $estado, $observaciones);
 }
 
 ?>
@@ -20,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crear usuario</title>
+  <title>Agregar Insumo</title>
 </head>
 
 <body>
@@ -28,40 +29,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <h1>Agregar insumo</h1>
 
   <form action="../php/agregar_insumo.php" method="post">
-    <label for="codigo">codigo:</label><br>
-    <input type="text" codigo="codigo" placeholder="Ingrese un codigo" required>
-    <br><br>
-    
+
     <label for="nombre">Nombre:</label><br>
-    <input type="text" name="nombre" placeholder="Ingrese un nombre" required>
+    <input type="text" name="nombre" placeholder="Ingrese nombre insumo" required>
     <br><br>
 
-    <label for="categoria">Categoria:</label><br>
+    <label for="categoria">Categoría:</label><br>
     <select name="categoria">
-      <option value="tecnologia">tecnologia</option>
-      <option value="bibliografia">bibliografia</option>
-      <option value="otros">otros</option>
+      <option value="tecnologia">Tecnologia</option>
+      <option value="bibliografia">Bibliografía</option>
+      <option value="electronica">Electronica</option>
+      <option value="otros">Otros</option>
     </select>
     <br><br>
 
-      <label for="estado_conservacion">estado_conservacion:</label><br>
-    <select name="estado_conservacion">
-      <option value="correcto_estado">correcto_estado</option>
-      <option value="fuera_servicio">fuera_servicio</option>
-      <option value="repositorio">repositorio</option>
+    <label for="disponibilidad">Disponibilidad:</label><br>
+    <select name="disponibilidad">
+      <option value="disponible">Disponible</option>
+      <option value="en_prestamo">En préstamo</option>
+      <option value="baja">Baja</option>
     </select>
     <br><br>
 
-    <label for="gestion">gestion:</label><br>
-    <select name="gestion">
-      <option value="disponible">disponible</option>
-      <option value="prestamo">prestamo</option>
-      <option value="baja">baja</option>
+    <label for="estado">Estado:</label><br>
+    <select name="estado">
+      <option value="disponible">Disponible</option>
+      <option value="en_reparacion">En reparación</option>
+      <option value="fuera_servicio">Fuera de servicio</option>
     </select>
     <br><br>
 
-    <label for="observacion">Observacion:</label><br>
-    <input type="text" name="observacion" placeholder="Ingrese una observacion" required>
+    <label for="observaciones">Observaciones:</label><br>
+    <input type="text" name="observaciones" placeholder="Observaciones" required>
     <br><br>
 
     <input type="submit" value="Guardar">
