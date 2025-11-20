@@ -168,17 +168,16 @@ function editarInsumo($conexion, $id, $nombre, $categoria, $disponibilidad, $est
         $stmt->bind_param("sssssi", $nombre, $categoria, $disponibilidad, $estado, $observaciones, $id);
 
         if ($stmt->execute()) {
-            echo "Insumo actualizado correctamente";
-            // Opcional: redirigir a la lista de alumnos
-            header("Location: listar_insumos.php");
-            exit();
+            $stmt->close();
+            return true;
         } else {
-            echo "Error al actualizar insumo: " . $stmt->error;
+            error_log("Error al actualizar insumo: " . $stmt->error);
+            $stmt->close();
+            return false;
         }
-
-        $stmt->close();
     } else {
-        echo "Error al preparar la consulta: " . $conexion->error;
+        error_log("Error al preparar la consulta: " . $conexion->error);
+        return false;
     }
 }
 
