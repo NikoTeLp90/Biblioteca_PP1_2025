@@ -221,13 +221,13 @@ function eliminarInsumo($conexion, $id) {
 }
 
 // PRESTAMOS ------------------------
-function agregarPrestamo($conexion, $insumo_id, $destinatario, $fecha_limite, $observacion) {
+function agregarPrestamo($conexion, $insumo_id, $destinatario, $fecha_limite, $observacion, $actividad) {
     // Intento 1: insertar con columna observacion (si existe)
-    $queryConObs = "INSERT INTO prestamo (insumo_id, destinatario, fecha_limite, observacion) VALUES (?,?,?,?)";
+    $queryConObs = "INSERT INTO prestamo (insumo_id, destinatario, fecha_limite, observacion, actividad) VALUES (?,?,?,?,?)";
     $stmt = $conexion->prepare($queryConObs);
 
     if ($stmt) {
-        $stmt->bind_param("isss", $insumo_id, $destinatario, $fecha_limite, $observacion);
+        $stmt->bind_param("isss", $insumo_id, $destinatario, $fecha_limite, $observacion, $actividad);
         if ($stmt->execute()) {
             $stmt->close();
             return true;

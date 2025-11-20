@@ -12,17 +12,17 @@ if (!isset($_SESSION['usuario'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
-    $cantidad = trim($_POST["cantidad"]);
-    $categoria = trim($_POST["categoria"]);
-    $disponibilidad = trim($_POST["disponibilidad"]);
-    $estado = trim($_POST["estado"]);
+    #$cantidad = trim($_POST["cantidad"]);
+    #$categoria = trim($_POST["categoria"]);
+    #$disponibilidad = trim($_POST["disponibilidad"]);
+    #$estado = trim($_POST["estado"]);
     $observaciones = trim($_POST["observaciones"]);
 
     $exitosos = 0;
     $errores = 0;
 
     for ($i = 0; $i < $cantidad; $i++) {
-        if (agregarInsumo($conexion, $nombre, $categoria, $disponibilidad, $estado, $observaciones)) {
+        if (agregarInsumo($conexion, $nombre, $observaciones)) {
             $exitosos++;
         } else {
             $errores++;
@@ -103,8 +103,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Cantidad</label>
-                        <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" value="1" required>
+                        <!-- Cantidad dinámica (no se envía al backend porque no tiene name) -->
+                        <div class="mb-3">
+                            <label for="inputCantidad" class="form-label">Cantidad</label>
+                            <input type="number" class="form-control" id="inputCantidad" min="1" value="1">
+                            <small class="form-text text-muted">Solo controla cuántos ítems se crean. No se guarda en la base de datos.</small>
+                        </div>
+                        
+                        <!-- Contenedor donde se generan N bloques de Nombre (copiado) + Observación -->
+                        <div id="duplicadosContainer"></div>
                     </div>
                     <!-- Contenedor donde se agregarán filas dinámicas para cada unidad -->
                     <div class="col-12">
@@ -153,3 +160,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </body>
 </html>
+
+<script>
+(function() {
+    const cantidadEl = document.getElementById('inputCantidad');
+    const container = document.getElementById('duplicadosContainer');
+    // Detecta el campo original de nombre y observación
+    const masterNameEl = document.querySelector('input[name="nombre"]');
+    const masterObsEl = document.querySelector('input[name="observacion"]') || document.querySelector('input[name="observaciones"]');
+
+    function getCantidad() {
+        const n = parseInt(cantidadEl.value, 10);
+        return isNaN(n) || n < 1 ? 1 : n;
+    }
+
+    function renderDuplicados() {
+        const n = getCantidad();
+        const masterVal = masterNameEl ? masterNameEl.value : '';
+        container.innerHTML = '';
+
+        // Si Cantidad es 1, no agregamos duplicados
+        if (n <= 1) return;
+
+        const dupCount = n - 1;
+        for (let i = 1; i <= dupCount; i++) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'border rounded p-2 mb-2';
+
+            // Nombre (copiado del original)
+            const groupNombre = document.createElement('div');
+            groupNombre.className = 'mb-2';
+            groupNombre.innerHTML = `
+                <label class="form-label">Nombre (copiado) ${i + 1}</label>
+                <input type="text" class="form-control" name="nombres[]" value="${masterVal}" readonly>
+            `;
+
+            // Observación por ítem
+            const groupObs = document.createElement('div');
+            groupObs.className = 'mb-2';
+            groupObs.innerHTML = `
+                <label class="form-label">Observación ${i + 1}</label>
+                <input type="text" class="form-control" name="observaciones[]">
+            `;
+
+            wrapper.appendChild(groupNombre);
+            wrapper.appendChild(groupObs);
+            container.appendChild(wrapper);
+        }
+    }
+
+    // Redibujar al cambiar cantidad
+    cantidadEl.addEventListener('input', renderDuplicados);
+
+    // Mantener sincronizados los nombres duplicados si cambia el original
+    if (masterNameEl) {
+        masterNameEl.addEventListener('input', () => {
+            document.querySelectorAll('input[name="nombres[]"]').forEach(el => {
+                el.value = masterNameEl.value;
+            });
+        });
+    }
+
+    // Inicializar
+    renderDuplicados();
+})();
+</script>
