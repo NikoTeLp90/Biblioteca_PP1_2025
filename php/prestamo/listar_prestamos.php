@@ -84,7 +84,7 @@ $prestamos = obtenerPrestamos($conexion, $filtro);
                     </tr>
                 </thead>
                 <tbody>
-<?php foreach ($prestamos as $prestamo): ?>
+                  <?php foreach ($prestamos as $prestamo): ?>
                         <?php 
                             $estadoClass = '';
                             $estadoTexto = '';

@@ -36,6 +36,51 @@ try {
 } catch (Exception $e) {
     die("Error: " . $e->getMessage());
 }
+
+$totalPrestamos = 0;
+$sql_count_prestamos = "SELECT COUNT(id) AS total_registros FROM prestamo WHERE activo = 1";
+$result_count_prestamos = $conexion->query($sql_count_prestamos);
+
+if ($result_count_prestamos) {
+    $row_count_prestamos = $result_count_prestamos->fetch_assoc();
+    $totalPrestamos = $row_count_prestamos['total_registros'];
+} else {
+    error_log("Error al contar préstamos: " . $conexion->error);
+}
+
+$cantidadInsumos = 0;
+$sql_count_insumos = "SELECT COUNT(id) AS cant_insumos FROM insumo WHERE disponibilidad = 'disponible' AND estado = 'disponible'";
+$result_count_insumos = $conexion->query($sql_count_insumos);
+
+if ($result_count_insumos) {
+    $row_count_insumos = $result_count_insumos->fetch_assoc();
+    $cantidadInsumos = $row_count_insumos['cant_insumos'];
+} else {
+    error_log("Error al contar insumos: " . $conexion->error);
+}
+
+$insumosNoDisponibles = 0;
+$sql_count_no_insumos = "SELECT COUNT(id) AS no_insumos FROM insumo WHERE estado IN ('en_reparacion', 'fuera_servicio')";
+$result_count_no_insumos = $conexion->query($sql_count_no_insumos);
+
+if ($result_count_no_insumos) {
+    $row_count_no_insumos = $result_count_no_insumos->fetch_assoc();
+    $insumosNoDisponibles = $row_count_no_insumos['no_insumos'];
+} else {
+    error_log("Error al contar insumos: " . $conexion->error);
+}
+
+$usuariosPrestamos = 0;
+$sql_count_usuarios = "SELECT COUNT(DISTINCT destinatario) AS usuarios_prestamos FROM prestamo WHERE activo = 1";
+$result_count_usuarios = $conexion->query($sql_count_usuarios);
+
+if ($result_count_usuarios) {
+    $row_count_usuarios = $result_count_usuarios->fetch_assoc();
+    $usuariosPrestamos = $row_count_usuarios['usuarios_prestamos'];
+} else {
+    error_log("Error al contar usuarios: " . $conexion->error);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -108,13 +153,17 @@ try {
         <div class="col-md-3">
           <div class="card p-3">
             <h5 class="card-title text-muted">Total de insumos disponibles</h5>
-            <h2 class="card-text fw-bold" id="totalInsumos">0</h2>
+            <h2 class="card-text fw-bold" id="totalInsumos">
+              <?php echo $cantidadInsumos; ?>
+            </h2>
           </div>
         </div>
         <div class="col-md-3">
           <div class="card p-3">
             <h5 class="card-title text-muted">Insumos prestados actualmente</h5>
-            <h2 class="card-text fw-bold" id="insumosPrestados">0</h2>
+            <h2 class="card-text fw-bold" id="insumosPrestados">
+              <?php echo $totalPrestamos; ?>
+            </h2>
           </div>
         </div>
         <div class="col-md-3">
@@ -122,7 +171,9 @@ try {
             <h5 class="card-title text-muted">
               Insumos en reparación o fuera de servicio
             </h5>
-            <h2 class="card-text fw-bold" id="insumosReparacion">0</h2>
+            <h2 class="card-text fw-bold" id="insumosReparacion">
+              <?php echo $insumosNoDisponibles; ?>
+            </h2>
           </div>
         </div>
         <div class="col-md-3">
@@ -130,7 +181,9 @@ try {
             <h5 class="card-title text-muted">
               Usuarios con préstamos activos
             </h5>
-            <h2 class="card-text fw-bold" id="usuariosActivos">0</h2>
+            <h2 class="card-text fw-bold" id="usuariosActivos">
+              <?php echo $usuariosPrestamos; ?>
+            </h2>
           </div>
         </div>
       </div>
