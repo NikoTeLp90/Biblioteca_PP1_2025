@@ -391,14 +391,6 @@ function filtrarInsumos() {
                 <label for="inputDestinatario" class="form-label">Destinatario</label>
                 <input type="text" class="form-control" id="inputDestinatario" required>
               </div>
-              <div class="mb-3">
-                <label for="inputFechaLimite" class="form-label">Fecha límite</label>
-                <input type="date" class="form-control" id="inputFechaLimite" required>
-              </div>
-              <div class="mb-3">
-                <label for="inputObservacion" class="form-label">Observación</label>
-                <input type="text" class="form-control" id="inputObservacion">
-              </div>
               <button type="submit" class="btn btn-danger w-100">
                 Confirmar préstamo
               </button>
@@ -530,21 +522,17 @@ function filtrarInsumos() {
         e.preventDefault();
         
         const destinatario = document.getElementById('inputDestinatario').value;
-        const fechaLimite = document.getElementById('inputFechaLimite').value;
-        const observacion = document.getElementById('inputObservacion').value;
         
         const prestamo = {
           insumos: Array.from(insumosSeleccionados.values()),
           destinatario: destinatario,
-          fecha_limite: fechaLimite,
-          observacion: observacion,
         };
         
         console.log('Procesando préstamo:', prestamo);
         
         // Redirigir a agregar_prestamo.php con los datos para crear el prestamo
         const insumosIds = prestamo.insumos.map(insumo => insumo.id).join(',');
-        const url = `php/prestamo/agregar_prestamo.php?destinatario=${encodeURIComponent(destinatario)}&insumos=${insumosIds}&fecha_limite=${encodeURIComponent(fechaLimite)}&observacion=${encodeURIComponent(observacion)}`;
+        const url = `php/prestamo/agregar_prestamo.php?destinatario=${encodeURIComponent(destinatario)}&insumos=${insumosIds}`;
         window.location.href = url;
 
 
