@@ -222,61 +222,95 @@ function eliminarInsumo($conexion, $id) {
 
 // PRESTAMOS ------------------------
 function agregarPrestamo($conexion, $insumo_id, $destinatario) {
-    // Intento 1: insertar con columna observacion (si existe)
-    $queryConObs = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?,?)";
-    $stmt = $conexion->prepare($queryConObs);
 
-    if ($stmt) {
-        $stmt->bind_param("is", $insumo_id, $destinatario);
-        if ($stmt->execute()) {
-            $stmt->close();
-            return true;
+    try {
+        $conexion->begin_transaction();
+
+        $sql_insert = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?, ?)";
+        $stmt_insert = $conexion->prepare($sql_insert);
+
+        $stmt_insert->bind_param("is", $insumo_id, $destinatario);
+        $stmt_insert->execute();
+        $stmt_insert->close();
+
+        $sql_update = "UPDATE insumo SET disponibilidad = 'en_prestamo' WHERE id = ? AND disponibilidad = 'disponible'";
+        $stmt_update = $conexion->prepare($sql_update);
+        $stmt_update->bind_param("i", $insumo_id);
+        $stmt_update->execute();
+
+        if ($stmt_update->affected_rows === 0) {
+            throw new Exception("El insumo con ID $insumo_id no está disponible para préstamo o no existe.");
         }
-        // Si falla, verificamos si es por columna desconocida y probamos sin observacion
-        $errno = $stmt->errno;
-        $err = $stmt->error;
-        $stmt->close();
-        if ($errno === 1054 || stripos($err, 'Unknown column') !== false) {
-            // Intento 2: insertar sin columna observacion
-            $querySinObs = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?,?)";
-            if ($stmt2 = $conexion->prepare($querySinObs)) {
-                $stmt2->bind_param("is", $insumo_id, $destinatario);
-                if ($stmt2->execute()) {
-                    $stmt2->close();
-                    return true;
-                } else {
-                    error_log('Error INSERT prestamo (sin observacion): ' . $stmt2->error . ' | SQL: ' . $querySinObs);
-                    $stmt2->close();
-                    return false;
-                }
-            } else {
-                error_log('Error prepare prestamo (sin observacion): ' . $conexion->error . ' | SQL: ' . $querySinObs);
-                return false;
-            }
-        } else {
-            error_log('Error INSERT prestamo: ' . $err . ' | SQL: ' . $queryConObs);
-            return false;
-        }
-    } else {
-        // Si no se puede preparar, probamos directamente sin observacion
-        error_log('Error prepare prestamo: ' . $conexion->error . ' | SQL: ' . $queryConObs);
-        $querySinObs = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?,?)";
-        if ($stmt2 = $conexion->prepare($querySinObs)) {
-            $stmt2->bind_param("is", $insumo_id, $destinatario);
-            if ($stmt2->execute()) {
-                $stmt2->close();
-                return true;
-            } else {
-                error_log('Error INSERT prestamo (sin observacion): ' . $stmt2->error . ' | SQL: ' . $querySinObs);
-                $stmt2->close();
-                return false;
-            }
-        } else {
-            error_log('Error prepare prestamo (sin observacion): ' . $conexion->error . ' | SQL: ' . $querySinObs);
-            return false;
-        }
+        $stmt_update->close();
+        $conexion->commit();
+
+        return true;
+
+    } catch (Exception $e) {
+
+        $conexion->rollback();
+        error_log('Error en la transacción de préstamo: ' . $e->getMessage());
+        return false;
     }
 }
+
+// function agregarPrestamo($conexion, $insumo_id, $destinatario) {
+//     // Intento 1: insertar con columna observacion (si existe)
+//     $queryConObs = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?,?)";
+//     $stmt = $conexion->prepare($queryConObs);
+//
+//     if ($stmt) {
+//         $stmt->bind_param("is", $insumo_id, $destinatario);
+//         if ($stmt->execute()) {
+//             $stmt->close();
+//             return true;
+//         }
+//         // Si falla, verificamos si es por columna desconocida y probamos sin observacion
+//         $errno = $stmt->errno;
+//         $err = $stmt->error;
+//         $stmt->close();
+//         if ($errno === 1054 || stripos($err, 'Unknown column') !== false) {
+//             // Intento 2: insertar sin columna observacion
+//             $querySinObs = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?,?)";
+//             if ($stmt2 = $conexion->prepare($querySinObs)) {
+//                 $stmt2->bind_param("is", $insumo_id, $destinatario);
+//                 if ($stmt2->execute()) {
+//                     $stmt2->close();
+//                     return true;
+//                 } else {
+//                     error_log('Error INSERT prestamo (sin observacion): ' . $stmt2->error . ' | SQL: ' . $querySinObs);
+//                     $stmt2->close();
+//                     return false;
+//                 }
+//             } else {
+//                 error_log('Error prepare prestamo (sin observacion): ' . $conexion->error . ' | SQL: ' . $querySinObs);
+//                 return false;
+//             }
+//         } else {
+//             error_log('Error INSERT prestamo: ' . $err . ' | SQL: ' . $queryConObs);
+//             return false;
+//         }
+//     } else {
+//         // Si no se puede preparar, probamos directamente sin observacion
+//         error_log('Error prepare prestamo: ' . $conexion->error . ' | SQL: ' . $queryConObs);
+//         $querySinObs = "INSERT INTO prestamo (insumo_id, destinatario) VALUES (?,?)";
+//         if ($stmt2 = $conexion->prepare($querySinObs)) {
+//             $stmt2->bind_param("is", $insumo_id, $destinatario);
+//             if ($stmt2->execute()) {
+//                 $stmt2->close();
+//                 return true;
+//             } else {
+//                 error_log('Error INSERT prestamo (sin observacion): ' . $stmt2->error . ' | SQL: ' . $querySinObs);
+//                 $stmt2->close();
+//                 return false;
+//             }
+//         } else {
+//             error_log('Error prepare prestamo (sin observacion): ' . $conexion->error . ' | SQL: ' . $querySinObs);
+//             return false;
+//         }
+//     }
+// }
+
 function obtenerPrestamos($conexion, $filtro = 'todos'): array {
     $sql = "SELECT 
                 p.id,
